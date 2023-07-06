@@ -1,5 +1,3 @@
-import * as reactHooks from './react-hooks';
+import * as reactHooks from './react-hooks'
 
-export {
-  reactHooks
-}
+export { reactHooks }

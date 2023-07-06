@@ -1,12 +1,12 @@
-import { Options } from './types';
-import getDefaultConfiguration from './get-default-configuration';
+import { Options } from './types'
+import getDefaultConfiguration from './get-default-configuration'
 
 export default function build(options: Options) {
   const defaultConfigurationOptions = getDefaultConfiguration({
     outputPath: options.outputPath,
     isDev: options.isDev,
     devServerPort: options.devServerPort,
-  });
+  })
 
   const {
     mode = defaultConfigurationOptions.mode,
@@ -17,8 +17,8 @@ export default function build(options: Options) {
     resolve = defaultConfigurationOptions.resolve,
     plugins = defaultConfigurationOptions.plugins,
     optimization = defaultConfigurationOptions.optimization,
-    devServer = defaultConfigurationOptions.devServer
-  } = options;
+    devServer = defaultConfigurationOptions.devServer,
+  } = options
 
   return {
     mode,
@@ -30,6 +30,6 @@ export default function build(options: Options) {
     resolve,
     plugins,
     optimization,
-    devServer
+    devServer,
   }
 }

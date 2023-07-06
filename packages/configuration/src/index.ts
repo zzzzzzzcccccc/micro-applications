@@ -1,5 +1,3 @@
-import webpackConfiguration from './webpack';
+import webpackConfiguration from './webpack'
 
-export {
-  webpackConfiguration
-}
+export { webpackConfiguration }

@@ -1,3 +1,3 @@
-import RemoteModule from './remote-module';
+import RemoteModule from './remote-module'
 
-export default RemoteModule;
+export default RemoteModule

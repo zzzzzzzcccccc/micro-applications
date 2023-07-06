@@ -1,7 +1,4 @@
-import Navigation from "./navigation";
-import RemoteModule from "./remote-module";
+import Navigation from './navigation'
+import RemoteModule from './remote-module'
 
-export {
-  Navigation,
-  RemoteModule
-}
+export { Navigation, RemoteModule }

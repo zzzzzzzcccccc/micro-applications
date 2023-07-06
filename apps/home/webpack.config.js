@@ -1,12 +1,12 @@
-const path = require('path');
-const { webpackConfiguration } = require('@micro/configuration');
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-const pkg = require('./package.json');
+const path = require('path')
+const { webpackConfiguration } = require('@micro/configuration')
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
+const pkg = require('./package.json')
 
 const pathResolve = (target = '') => path.resolve(__dirname, target)
 
 module.exports = (_, { mode }) => {
-  const isDev = mode !== 'production';
+  const isDev = mode !== 'production'
 
   const config = webpackConfiguration.remote({
     outputPath: pathResolve('dist'),
@@ -25,9 +25,9 @@ module.exports = (_, { mode }) => {
         acc[moduleName] = {
           singleton: true,
         }
-        return acc;
+        return acc
       }, {}),
-    })
+    }),
   )
 
   return config

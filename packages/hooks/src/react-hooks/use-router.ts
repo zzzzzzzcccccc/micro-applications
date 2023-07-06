@@ -1,16 +1,19 @@
-import { useState, useCallback } from "react";
-import { Update } from "history";
+import { useState, useCallback } from 'react'
+import { Update } from 'history'
 
 export interface Options {
-  defaultUpdate: Update;
+  defaultUpdate: Update
 }
 
 export default function useRouter(options: Options) {
-  const [update, setUpdate] = useState(options.defaultUpdate);
+  const [update, setUpdate] = useState(options.defaultUpdate)
 
-  const onChange = useCallback((update: Update) => {
-    setUpdate(update);
-  }, [options])
+  const onChange = useCallback(
+    (update: Update) => {
+      setUpdate(update)
+    },
+    [options],
+  )
 
   return {
     update,

@@ -1,5 +1,5 @@
 export interface LoadPayload {
-  remotePath: string;
-  appName: string;
-  url: string;
+  remotePath: string
+  appName: string
+  url: string
 }

@@ -1,7 +1,4 @@
-import addScript from "./add-script";
-import loadModule from "./load-module";
+import addScript from './add-script'
+import loadModule from './load-module'
 
-export {
-  addScript,
-  loadModule
-}
+export { addScript, loadModule }

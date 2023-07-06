@@ -1,7 +1,7 @@
-const path = require('path');
-const { webpackConfiguration } = require('@micro/configuration');
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-const pkg = require('./package.json');
+const path = require('path')
+const { webpackConfiguration } = require('@micro/configuration')
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
+const pkg = require('./package.json')
 
 const pathResolve = (target = '') => path.resolve(__dirname, target)
 
@@ -16,9 +16,9 @@ module.exports = (_, { mode }) => {
       RUNTIME_ENV: JSON.stringify({
         var1: 1,
         var2: false,
-        var3: 'hello world'
-      })
-    }
+        var3: 'hello world',
+      }),
+    },
   })
 
   config.plugins.unshift(
@@ -31,9 +31,9 @@ module.exports = (_, { mode }) => {
           requiredVersion: pkg.dependencies[moduleName],
         }
         return acc
-      }, {})
-    })
+      }, {}),
+    }),
   )
 
-  return config;
+  return config
 }

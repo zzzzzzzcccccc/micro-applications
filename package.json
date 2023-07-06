@@ -14,7 +14,24 @@
     "build:app": "lerna run build --stream --scope @apps/*",
     "release:major": "lerna version major --conventional-commits --no-private --no-git-tag-version --no-push",
     "release:minor": "lerna version minor --conventional-commits --no-private --no-git-tag-version --no-push",
-    "release:patch": "lerna version patch --conventional-commits --no-private --no-git-tag-version --no-push"
+    "release:patch": "lerna version patch --conventional-commits --no-private --no-git-tag-version --no-push",
+    "prepare": "husky install",
+    "prettier:fix": "prettier --write ./packages ./apps"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,css,scss,md,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write",
+      "git add"
+    ]
   },
   "license": "MIT",
   "dependencies": {
@@ -38,6 +55,7 @@
     "css-minimizer-webpack-plugin": "^5.0.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",
+    "husky": "^8.0.3",
     "lerna": "^6.3.0",
     "less": "^4.1.3",
     "less-loader": "^11.1.3",

@@ -1,5 +1,5 @@
-import Sdk from './sdk';
+import Sdk from './sdk'
 
-const sdk = new Sdk();
+const sdk = new Sdk()
 
-export default sdk;
+export default sdk
