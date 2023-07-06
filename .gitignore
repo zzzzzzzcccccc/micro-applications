@@ -1,0 +1,30 @@
+# Dependency directory
+node_modules
+
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build directory
+dist
+build
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Jetbrains IDEs config ###
+.idea
+
+### Jest code coverage ###
+coverage
+
+# local dev certificates 
+*.pem

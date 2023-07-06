@@ -1,0 +1,26 @@
+{
+  "name": "@apps/home",
+  "version": "0.0.0",
+  "description": "App for Home",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --mode development --config ./webpack.config.js",
+    "build": "webpack --mode production --config ./webpack.config.js"
+  },
+  "dependencies": {
+    "@micro/sdk": "^0.0.0",
+    "@micro/hooks": "^0.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1"
+  },
+  "devDependencies": {
+    "@micro/configuration": "*",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
+  },
+  "browserslist": [
+    "> 1%",
+    "ie >= 9"
+  ]
+}
