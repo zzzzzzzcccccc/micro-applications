@@ -6,14 +6,11 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import { DefaultOptions } from './types'
+import { buildModuleRuleByCss, buildModuleRuleByBabel, buildModuleRuleByUrl } from '../../utils'
 
 const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
   const { isDev = true } = options
   const staticPath = isDev ? '/' : './'
-  const miniCssExtractPluginLoader = {
-    loader: MiniCssExtractPlugin.loader,
-    options: { publicPath: staticPath },
-  }
   const {
     outputPath,
     publicPath,
@@ -45,39 +42,9 @@ const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
       filename: '[name].[contenthash:6].js',
     },
     module: {
-      rules: [
-        {
-          test: /\.(jpg|jpeg|png|gif|heic|webp|svg)$/i,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 8192,
-                name: '[name].[contenthash].[ext]',
-                publicPath: staticPath,
-              },
-            },
-          ],
-        },
-        {
-          test: /\.(js|ts|tsx)$/i,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
-        },
-        {
-          test: /\.css$/i,
-          use: [miniCssExtractPluginLoader, 'css-loader'],
-        },
-        {
-          test: /\.less$/i,
-          use: [miniCssExtractPluginLoader, 'css-loader', 'less-loader'],
-        },
-        {
-          test: /\.s[ac]ss$/i,
-          use: [miniCssExtractPluginLoader, 'css-loader', 'sass-loader'],
-        },
-      ],
+      rules: [buildModuleRuleByUrl({ publicPath: staticPath, limit: 0 }), buildModuleRuleByBabel()].concat(
+        buildModuleRuleByCss({ publicPath: staticPath }) as any[],
+      ),
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],

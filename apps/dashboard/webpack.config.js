@@ -11,13 +11,13 @@ module.exports = (_, { mode }) => {
   const config = webpackConfiguration.remote({
     outputPath: pathResolve('dist'),
     isDev,
-    devServerPort: 3334,
+    devServerPort: 3335,
   })
 
   config.plugins.unshift(
     new ModuleFederationPlugin({
-      name: 'home_app',
-      library: { type: 'var', name: 'home_app' },
+      name: 'dashboard_app',
+      library: { type: 'var', name: 'dashboard_app' },
       filename: `v${pkg.version}/remoteEntry.js`,
       exposes: {
         './App': './src/index',

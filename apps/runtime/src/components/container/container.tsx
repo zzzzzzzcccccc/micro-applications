@@ -7,10 +7,14 @@ function Container(props: ContainerProps) {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    let unmount: () => void
     sdk.remoteModule.load(app).then((module) => {
-      module.default(ref.current, { app })
+      unmount = module.default(ref.current, { app })
     })
-  }, [])
+    return () => {
+      unmount?.()
+    }
+  }, [app])
 
   return <div className={[app.appName, className].filter(Boolean).join(' ')} style={style} ref={ref} />
 }

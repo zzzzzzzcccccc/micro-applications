@@ -14,6 +14,12 @@ function Router() {
       remotePath: './App',
       url: 'http://localhost:3334/v0.0.1/remoteEntry.js',
     },
+    {
+      path: '/dashboard',
+      appName: 'dashboard_app',
+      remotePath: './App',
+      url: 'http://localhost:3335/v0.0.0/remoteEntry.js',
+    },
   ]
 
   useEffect(() => {
