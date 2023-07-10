@@ -1,7 +1,7 @@
 {
-  "name": "@apps/dashboard",
-  "version": "0.0.0",
-  "description": "App for Dashboard",
+  "name": "@apps/login",
+  "version": "0.0.1",
+  "description": "App for Login",
   "license": "MIT",
   "scripts": {
     "start": "webpack serve --mode development --config ./webpack.config.js",
@@ -9,11 +9,7 @@
   },
   "dependencies": {
     "@micro/sdk": "^0.0.1",
-    "vue": "^3.3.4",
-    "vue-router": "^4.2.4"
-  },
-  "devDependencies": {
-    "@micro/configuration": "^0.0.1"
+    "vue": "^3.3.4"
   },
   "browserslist": [
     "> 1%",

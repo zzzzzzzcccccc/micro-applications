@@ -18,7 +18,7 @@ module.exports = (_, { mode }) => {
     new ModuleFederationPlugin({
       name: 'home_app',
       library: { type: 'var', name: 'home_app' },
-      filename: `v${pkg.version}/remoteEntry.js`,
+      filename: `home_app/v${pkg.version}/remoteEntry.js`,
       exposes: {
         './App': './src/index',
       },

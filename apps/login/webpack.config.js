@@ -16,9 +16,9 @@ module.exports = (_, { mode }) => {
 
   config.plugins.unshift(
     new ModuleFederationPlugin({
-      name: 'dashboard_app',
-      library: { type: 'var', name: 'dashboard_app' },
-      filename: `v${pkg.version}/remoteEntry.js`,
+      name: 'login_app',
+      library: { type: 'var', name: 'login_app' },
+      filename: `login_app/v${pkg.version}/remoteEntry.js`,
       exposes: {
         './App': './src/index',
       },

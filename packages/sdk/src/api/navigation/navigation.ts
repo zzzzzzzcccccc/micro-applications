@@ -16,7 +16,7 @@ class Navigation {
     }
   }
 
-  public get currentPathname() {
+  public get pathname() {
     return this.history.location.pathname
   }
 

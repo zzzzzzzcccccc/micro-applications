@@ -6,7 +6,7 @@ export default function bootstrap<Element extends HTMLElement, Payload extends R
   payload: Payload = {} as Payload,
 ) {
   const app = createApp(App)
-  app.provide('app', payload)
+  app.provide('app', payload.app)
   app.mount(el)
 
   return () => {
