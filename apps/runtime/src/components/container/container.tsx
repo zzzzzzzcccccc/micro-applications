@@ -16,6 +16,12 @@ const appMapper = {
     remotePath: './App',
     url: 'http://localhost:3335/login_app/v0.0.1/remoteEntry.js',
   },
+  dashboard: {
+    path: '/dashboard',
+    appName: 'dashboard_app',
+    remotePath: './App',
+    url: 'http://localhost:3336/dashboard_app/v0.0.1/remoteEntry.js',
+  },
 }
 
 function Container(props: ContainerProps) {
@@ -28,10 +34,15 @@ function Container(props: ContainerProps) {
     let unmount: () => void
     if (app) {
       const target = ref.current as HTMLDivElement
+      const el = document.createElement('div')
       const app = appMapper[workspace]
 
+      target.innerHTML = ''
+      el.className = app.appName
+
       sdk.remoteModule.load(app).then((module) => {
-        unmount = module.default(target, { app })
+        target.appendChild(el)
+        unmount = module.default(el, { app })
       })
     }
 
@@ -40,7 +51,7 @@ function Container(props: ContainerProps) {
     }
   }, [app])
 
-  return <div className={[workspace, className].filter(Boolean).join(' ')} style={style} ref={ref} />
+  return <div className={className} style={style} ref={ref} />
 }
 
 export default Container

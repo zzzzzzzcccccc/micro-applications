@@ -1,0 +1,21 @@
+{
+  "name": "@apps/dashboard-panel",
+  "version": "0.0.1",
+  "description": "App for Dashboard Panel",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --mode development --config ./webpack.config.js",
+    "build": "webpack --mode production --config ./webpack.config.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@micro/configuration": "^0.0.1",
+    "@types/react": "^18.2.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "ie >= 9"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@apps/dashboard-container",
+  "version": "0.0.1",
+  "description": "App for Dashboard Container",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --mode development --config ./webpack.config.js",
+    "build": "webpack --mode production --config ./webpack.config.js"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@micro/configuration": "^0.0.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "ie >= 9"
+  ]
+}

@@ -11,6 +11,7 @@ export default function Layout() {
           <li onClick={() => sdk.navigation.push('/')}>root</li>
           <li onClick={() => sdk.navigation.push('/home')}>react app for home</li>
           <li onClick={() => sdk.navigation.push('/login')}>vue app for login</li>
+          <li onClick={() => sdk.navigation.push('/dashboard')}>react and vue app for dashboard</li>
         </ul>
       </div>
       <Outlet />

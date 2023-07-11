@@ -1,0 +1,25 @@
+{
+  "name": "@apps/dashboard",
+  "version": "0.0.1",
+  "description": "App for Dashboard",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --mode development --config ./webpack.config.js",
+    "build": "webpack --mode production --config ./webpack.config.js"
+  },
+  "dependencies": {
+    "@micro/hooks": "^0.0.1",
+    "@micro/sdk": "^0.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@micro/configuration": "^0.0.1",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
+  },
+  "browserslist": [
+    "> 1%",
+    "ie >= 9"
+  ]
+}
