@@ -1,5 +1,5 @@
 {
-  "name": "@apps/dashboard",
+  "name": "@app/dashboard",
   "version": "0.0.1",
   "description": "App for Dashboard",
   "license": "MIT",

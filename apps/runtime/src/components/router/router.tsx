@@ -17,7 +17,7 @@ function Router() {
     <RootRouter location={update.location} navigationType={update.action} navigator={history}>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path=":workspace" element={<Container />}>
+          <Route path=":name" element={<Container />}>
             <Route path="*" element={<Container />} />
           </Route>
         </Route>

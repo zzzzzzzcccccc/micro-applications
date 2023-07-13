@@ -4,7 +4,11 @@ import { addScript, loadModule } from '../../utils'
 class RemoteModule {
   private cache = new Map<string, any>()
 
-  public async load<T>({ url, appName, remotePath }: LoadPayload) {
+  public async load<T>(payload?: LoadPayload) {
+    if (!payload) {
+      return null
+    }
+    const { url, appName, remotePath } = payload
     const key = `${appName}@${url}:${remotePath}`
     if (this.cache.has(key)) {
       return this.cache.get(key)

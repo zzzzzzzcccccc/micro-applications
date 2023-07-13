@@ -1,5 +1,5 @@
 {
-  "name": "@apps/dashboard-container",
+  "name": "@app/dashboard-container",
   "version": "0.0.1",
   "description": "App for Dashboard Container",
   "license": "MIT",

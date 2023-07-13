@@ -1,11 +1,11 @@
 import React from 'react'
-import { Router } from './components'
+import { ProviderGlobal, Router } from './components'
 
 function App() {
   return (
-    <>
+    <ProviderGlobal>
       <Router />
-    </>
+    </ProviderGlobal>
   )
 }
 

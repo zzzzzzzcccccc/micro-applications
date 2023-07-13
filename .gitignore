@@ -26,5 +26,8 @@ build
 ### Jest code coverage ###
 coverage
 
-# local dev certificates 
+# local dev certificates
 *.pem
+
+#db
+postgresql

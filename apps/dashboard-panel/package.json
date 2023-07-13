@@ -1,5 +1,5 @@
 {
-  "name": "@apps/dashboard-panel",
+  "name": "@app/dashboard-panel",
   "version": "0.0.1",
   "description": "App for Dashboard Panel",
   "license": "MIT",

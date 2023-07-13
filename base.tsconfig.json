@@ -14,12 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "noEmit": true,
-    "types": ["node"],
+    "types": ["@types/node", "@types/jest"],
     "declaration": true,
     "outDir": "./dist",
-    "baseUrl": ".",
-    "paths": {
-      "@micro": ["packages/*"]
-    }
+    "baseUrl": "."
   }
 }

@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  common: &BASE
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  db:
+    image: postgres:12.10
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dummy_password
+      POSTGRES_DB: localdb
+
+  web-service:
+    <<: *BASE
+    command: yarn start:service:web-dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+    ports:
+      - 4000:4000

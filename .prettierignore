@@ -3,3 +3,9 @@
 **/*.ejs
 **/*.html
 package.json
+dist
+public
+test
+tests
+*.spec.*
+*.test.*

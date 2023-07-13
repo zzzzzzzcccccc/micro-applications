@@ -6,15 +6,11 @@ import sdk from '@micro/sdk'
 import './app.less'
 
 interface AppProps {
-  app: {
-    appName: string
-    path: string
-  }
   history: MemoryHistory
 }
 
-export default function App({ app, history }: AppProps) {
-  const { path } = app
+export default function App({ history }: AppProps) {
+  const app = sdk.app.findByName('home')
   const { update, onChange } = reactHooks.useRouter({
     defaultUpdate: { action: history.action, location: history.location },
   })
@@ -36,24 +32,24 @@ export default function App({ app, history }: AppProps) {
     <RootRouter location={update.location} navigationType={update.action} navigator={history}>
       <Routes>
         <Route
-          path={path}
+          path={app?.path}
           element={
             <>
               <ul>
                 <li>
-                  <Link to={path}>home app1</Link>
+                  <Link to={app?.path}>home app1</Link>
                 </li>
                 <li>
-                  <Link to={`${path}/app2`}>home app2</Link>
+                  <Link to={`${app?.path}/app2`}>home app2</Link>
                 </li>
               </ul>
               <Outlet />
             </>
           }
         >
-          <Route path={path} element={<div className="app">home app app1</div>} />
-          <Route path={`${path}/app2`} element={<div className="app">home app app2</div>} />
-          <Route path="*" element={<Navigate to={path} replace />} />
+          <Route path={app?.path} element={<div className="app">home app app1</div>} />
+          <Route path={`${app?.path}/app2`} element={<div className="app">home app app2</div>} />
+          <Route path="*" element={<Navigate to={app?.path} replace />} />
         </Route>
       </Routes>
     </RootRouter>

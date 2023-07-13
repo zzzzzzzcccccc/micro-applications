@@ -12,6 +12,7 @@ type WebpackPlugin =
 export interface Options {
   outputPath: string
   mode?: 'none' | 'development' | 'production'
+  defineEnvs?: Record<string, string>
   isDev?: boolean
   devServerPort?: number
   devServerProxy?: Record<string, any>
@@ -25,4 +26,4 @@ export interface Options {
   devServer?: any
 }
 
-export type DefaultOptions = Pick<Options, 'outputPath' | 'isDev' | 'devServerPort'>
+export type DefaultOptions = Pick<Options, 'outputPath' | 'isDev' | 'devServerPort' | 'defineEnvs'>

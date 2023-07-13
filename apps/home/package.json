@@ -1,5 +1,5 @@
 {
-  "name": "@apps/home",
+  "name": "@app/home",
   "version": "0.0.1",
   "description": "App for Home",
   "license": "MIT",

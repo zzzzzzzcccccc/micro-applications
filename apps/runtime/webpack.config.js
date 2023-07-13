@@ -14,9 +14,8 @@ module.exports = (_, { mode }) => {
     isDev,
     envs: {
       RUNTIME_ENV: JSON.stringify({
-        var1: 1,
-        var2: false,
-        var3: 'hello world',
+        BUILD_ENV: process.env.BUILD_ENV,
+        API_GATEWAY: process.env.API_GATEWAY,
       }),
     },
   })

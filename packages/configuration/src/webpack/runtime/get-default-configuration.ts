@@ -55,7 +55,10 @@ const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),
-      new webpack.DefinePlugin(defineEnvs),
+      new webpack.DefinePlugin({
+        ...defineEnvs,
+        __DEV_MODE__: isDev,
+      }),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash:6].css',
       }),
