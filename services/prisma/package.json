@@ -1,0 +1,37 @@
+{
+  "name": "@service/prisma",
+  "version": "0.0.1",
+  "description": "Service Prisma",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "yarn generate:watch & yarn build --watch",
+    "build": "yarn generate && rimraf dist && tsc",
+    "generate": "prisma generate",
+    "generate:watch": "yarn generate --watch",
+    "migrate:dev": "env-cmd -f .env.development prisma migrate dev --name init",
+    "migrate:reset": "prisma migrate reset --preview-feature",
+    "migrate:deploy": "prisma migrate deploy --preview-feature",
+    "migrate:status": "prisma migrate status --preview-feature",
+    "migrate:resolve": "prisma migrate resolve --preview-feature",
+    "migrate:reset:dev": "env-cmd -f .env.development yarn migrate:reset",
+    "migrate:deploy:dev": "env-cmd -f .env.development yarn migrate:deploy",
+    "migrate:status:dev": "env-cmd -f .env.development yarn migrate:status",
+    "migrate:resolve:dev": "env-cmd -f .env.development yarn migrate:resolve",
+    "format": "prisma format",
+    "studio": "prisma studio",
+    "studio:dev": "env-cmd -f .env.development prisma studio",
+    "seed": "env-cmd -f .env.development ts-node prisma/seed.ts"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0"
+  }
+}

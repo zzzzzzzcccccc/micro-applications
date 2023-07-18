@@ -31,3 +31,4 @@ coverage
 
 #db
 postgresql
+services/prisma/prisma/client

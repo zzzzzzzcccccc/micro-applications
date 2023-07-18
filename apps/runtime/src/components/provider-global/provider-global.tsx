@@ -14,7 +14,7 @@ export default function ProviderGlobal({ children }: { children: React.ReactNode
 
   useEffect(() => {
     const mounted = async () => {
-      const data = await run({ method: 'get', url: '/apps' })
+      const data = await run({ method: 'get', url: '/app' })
       if (data?.length) {
         sdk.app.set(data)
       }

@@ -9,7 +9,7 @@ export default function Layout() {
         <h1>runtime</h1>
         <ul>
           <li onClick={() => sdk.navigation.push('/')}>root</li>
-          {sdk.app.filterByField('type', 'application').map((app) => (
+          {sdk.app.filterByField('mode', 'APPLICATION').map((app) => (
             <li key={app.path} onClick={() => sdk.navigation.push(app.path as string)}>
               {app.name}
             </li>

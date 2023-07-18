@@ -9,12 +9,14 @@
     "services/*"
   ],
   "scripts": {
+    "postinstall": "yarn workspace @service/prisma build",
     "start": "yarn run start:libs & sleep 10 && yarn run start:apps",
     "start:libs": "lerna run start --stream --scope @micro/*",
     "start:apps": "lerna run start --stream --scope @app/*",
-    "start:service:web-dev": "yarn workspace @service/web start:dev",
+    "start:service:web": "yarn workspace @service/web start",
     "build:libs": "lerna run build --stream --scope @micro/*",
     "build:apps": "lerna run build --stream --scope @app/*",
+    "migrate:deploy": "yarn workspace @service/prisma migrate:deploy",
     "release:major": "lerna version major --conventional-commits --no-private --no-git-tag-version --no-push",
     "release:minor": "lerna version minor --conventional-commits --no-private --no-git-tag-version --no-push",
     "release:patch": "lerna version patch --conventional-commits --no-private --no-git-tag-version --no-push",

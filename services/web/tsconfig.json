@@ -13,6 +13,7 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "noEmit": false
+    "noEmit": false,
+    "strictPropertyInitialization": false
   }
 }

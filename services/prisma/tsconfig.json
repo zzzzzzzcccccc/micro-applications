@@ -1,0 +1,22 @@
+{
+  "extends": "../../base.tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "dist",
+    "target": "ES2015",
+    "module": "commonjs",
+    "strict": true,
+    "lib": ["esnext", "ES2018"],
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "noEmit": false
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules", "**/*.(spec|test).(js|ts|tsx)", "prisma"]
+}

@@ -2,28 +2,54 @@ version: '3'
 
 services:
   common: &BASE
+    environment:
+      - PORT=4000
+      - CORS_WHITELIST=http://localhost:3333
+      - DATABASE_URL=postgresql://postgres:dummy_password@db:5432/localdb?schema=public
     build:
       context: .
       dockerfile: Dockerfile
 
   db:
     image: postgres:12.10
+    restart: always
     ports:
       - 5432:5432
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
+    networks:
+      - db-net
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: dummy_password
       POSTGRES_DB: localdb
 
-  web-service:
+  db-migrate:
     <<: *BASE
-    command: yarn start:service:web-dev
+    command: yarn migrate:deploy
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+      - /usr/src/app/services/prisma/prisma/client
+    networks:
+      - db-net
+    depends_on:
+      - db
+
+  web-service:
+    <<: *BASE
+    command: yarn start:service:web
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/services/prisma/prisma/client
+    networks:
+      - db-net
     depends_on:
       - db
     ports:
       - 4000:4000
+
+networks:
+  db-net:
+    name: db-net
