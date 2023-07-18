@@ -21,16 +21,24 @@ Micro front-end framework, support react or vue
 | dashboard | Child application by react and vue |
 | dashboard-panel | Child application by react in dashboard |
 | dashboard-container | Child application by vue in dashboard |
-## Start
 
-- start libs
+### services
+
+| Name | Description |
+| ------ | ------ |
+| prisma | Database service |
+| web | Web service |
+
+## Setup
+
+### ui
 
 ```shell
-npm run start:libs
+yarn start
 ```
 
-- start apps
+### services
 
 ```shell
-npm run start:apps
+yarn start:service:web
 ```
