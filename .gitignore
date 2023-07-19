@@ -30,5 +30,4 @@ coverage
 *.pem
 
 #db
-postgresql
 services/prisma/prisma/client

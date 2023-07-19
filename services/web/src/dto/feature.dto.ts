@@ -1,8 +1,8 @@
-import { IsNotEmpty, Length, Max, IsEnum, IsOptional } from 'class-validator'
+import { IsNotEmpty, Length, IsEnum, IsOptional } from 'class-validator'
 import { Transform } from 'class-transformer'
-import { AppMode, AppStatus, AppFrame } from '../enums'
+import { FeatureStatus } from '../enums'
 
-export class QueryAppDto {
+export class QueryFeatureDto {
   @IsNotEmpty()
   @Transform(({ value }) => value.trim())
   @Length(1, 50)
@@ -10,24 +10,16 @@ export class QueryAppDto {
 
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
-  @Length(1, 100)
   @IsOptional()
+  @Length(1, 100)
   name?: string
 
-  @IsEnum(AppMode)
+  @IsEnum(FeatureStatus)
   @IsOptional()
-  mode?: AppMode
-
-  @IsEnum(AppFrame)
-  @IsOptional()
-  frame?: AppFrame
-
-  @IsEnum(AppStatus)
-  @IsOptional()
-  status?: AppStatus
+  status?: FeatureStatus
 }
 
-export class SaveAppDto<T = null> {
+export class SaveFeatureDto<T = null> {
   @IsOptional()
   id?: string
 
@@ -42,21 +34,13 @@ export class SaveAppDto<T = null> {
   name: string
 
   @Transform(({ value }) => value.trim())
-  @Max(100)
-  @IsOptional()
-  path?: string
+  @IsNotEmpty()
+  @Length(1, 255)
+  value: string
 
-  @IsEnum(AppMode)
+  @IsEnum(FeatureStatus)
   @IsOptional()
-  mode?: AppMode
-
-  @IsEnum(AppStatus)
-  @IsOptional()
-  status?: AppStatus
-
-  @IsEnum(AppFrame)
-  @IsOptional()
-  frame?: AppFrame
+  status?: FeatureStatus
 
   @IsOptional()
   metadata?: T

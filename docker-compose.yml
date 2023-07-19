@@ -6,19 +6,31 @@ services:
       - PORT=4000
       - CORS_WHITELIST=http://localhost:3333
       - DATABASE_URL=postgresql://postgres:dummy_password@db:5432/localdb?schema=public
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     build:
       context: .
       dockerfile: Dockerfile
 
+  redis:
+    image: redis:7-alpine
+    restart: on-failure
+    ports:
+      - 6379:6379
+    volumes:
+      - /var/lib/redis/data:/var/lib/redis/data
+    networks:
+      - docker-net
+
   db:
     image: postgres:12.10
-    restart: always
+    restart: on-failure
     ports:
       - 5432:5432
     volumes:
-      - ./postgresql/data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
     networks:
-      - db-net
+      - docker-net
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: dummy_password
@@ -32,7 +44,7 @@ services:
       - /usr/src/app/node_modules
       - /usr/src/app/services/prisma/prisma/client
     networks:
-      - db-net
+      - docker-net
     depends_on:
       - db
 
@@ -44,12 +56,13 @@ services:
       - /usr/src/app/node_modules
       - /usr/src/app/services/prisma/prisma/client
     networks:
-      - db-net
+      - docker-net
     depends_on:
       - db
+      - redis
     ports:
       - 4000:4000
 
 networks:
-  db-net:
-    name: db-net
+  docker-net:
+    name: docker-net

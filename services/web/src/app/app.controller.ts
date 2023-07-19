@@ -1,22 +1,24 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body, UseInterceptors } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Delete, Query, Param, Body, UseInterceptors } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AppService } from './app.service'
-import { SaveAppDto } from '../dto/app.dto'
+import { SaveAppDto, QueryAppDto } from '../dto/app.dto'
 import { ResponseSerializerInterceptor } from '../interceptor/response-serializer.interceptor'
 
+@ApiTags('app')
 @Controller('app')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/')
   @UseInterceptors(ResponseSerializerInterceptor)
-  findMany() {
-    return this.appService.findMany()
+  findMany(@Query() queryAppDto: QueryAppDto) {
+    return this.appService.findMany(queryAppDto)
   }
 
-  @Get('/:id')
+  @Get('/:tenant_id/:id')
   @UseInterceptors(ResponseSerializerInterceptor)
-  findById(@Param('id') id: string) {
-    return this.appService.findById(id)
+  findById(@Param('tenant_id') tenant_id: string, @Param('id') id: string) {
+    return this.appService.findById(id, tenant_id)
   }
 
   @Post('/')
@@ -31,8 +33,8 @@ export class AppController {
     return this.appService.save({ ...saveAppDto, id })
   }
 
-  @Delete('/:id')
-  deleteById(@Param('id') id: string) {
-    return this.appService.deleteById(id)
+  @Delete('/:tenant_id/:id')
+  deleteById(@Param('tenant_id') tenant_id: string, @Param('id') id: string) {
+    return this.appService.deleteById(id, tenant_id)
   }
 }

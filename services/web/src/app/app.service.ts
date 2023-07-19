@@ -1,17 +1,27 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@service/prisma'
-import { SaveAppDto } from '../dto/app.dto'
+import { SaveAppDto, QueryAppDto } from '../dto/app.dto'
 
 @Injectable()
 export class AppService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public findMany() {
-    return this.prismaService.app.findMany()
+  public findMany({ tenant_id, status, mode, name, frame }: QueryAppDto) {
+    return this.prismaService.app.findMany({
+      where: {
+        tenant_id,
+        name: {
+          contains: name,
+        },
+        mode,
+        status,
+        frame,
+      },
+    })
   }
 
-  public findById(id: string) {
-    return this.prismaService.app.findUnique({ where: { id: BigInt(id) } })
+  public findById(id: string, tenant_id: string) {
+    return this.prismaService.app.findUnique({ where: { id: BigInt(id), tenant_id } })
   }
 
   public save(payload: SaveAppDto) {
@@ -21,8 +31,8 @@ export class AppService {
     return this.create(payload)
   }
 
-  public deleteById(id: string) {
-    return this.prismaService.app.delete({ where: { id: BigInt(id) } })
+  public deleteById(id: string, tenant_id: string) {
+    return this.prismaService.app.delete({ where: { id: BigInt(id), tenant_id } })
   }
 
   private create(payload: SaveAppDto) {
