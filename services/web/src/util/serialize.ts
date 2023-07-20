@@ -29,7 +29,7 @@ export function serializeValue<T>(value: T): any {
 export function serializeKeysAndValues<T extends Record<string, any>>(record = {} as T) {
   return Object.keys(record).reduce((acc, key) => {
     const value = record[key] ?? ''
-    acc = [...acc, `${key}=${value}`]
+    acc = [...acc, `${key}=${serializeJsonString(value)}`]
     return acc
   }, [] as string[])
 }
@@ -50,4 +50,14 @@ export function serializeJsonString<T>(target: T, onError?: (e: any) => void) {
     onError?.(e)
     return ''
   }
+}
+
+export function serializeToArray<T>(target?: T | T[], separator = ',') {
+  if (!target) {
+    return [] as T[]
+  }
+  if (Array.isArray(target)) {
+    return target as T[]
+  }
+  return (target as string).split(separator) as T[]
 }

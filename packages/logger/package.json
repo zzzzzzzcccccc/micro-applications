@@ -1,15 +1,12 @@
 {
-  "name": "@micro/sdk",
+  "name": "@micro/logger",
   "version": "0.0.1",
-  "description": "Micro Sdk",
+  "description": "Micro Logger",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "yarn build --watch",
     "build": "rimraf dist && tsc"
-  },
-  "dependencies": {
-    "@micro/logger": "^0.0.1"
   }
 }

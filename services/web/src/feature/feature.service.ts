@@ -1,20 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { PrismaService } from '@service/prisma'
+import { PrismaService, Prisma } from '@service/prisma'
 import { RedisService } from '../redis/redis.service'
 import { QueryFeatureDto, SaveFeatureDto } from '../dto/feature.dto'
-import { serializeData, serializeJsonString, serializeJsonParse, serializeKeysAndValues } from '../util/serialize'
+import {
+  serializeData,
+  serializeJsonString,
+  serializeJsonParse,
+  serializeKeysAndValues,
+  serializeToArray,
+} from '../util/serialize'
+import { REDIS_QUERY_FIND_MANY_MAX_TIME } from '../constants'
+import { FeatureStatus } from '../enums'
 
 @Injectable()
 export class FeatureService {
   private readonly logger: Logger = new Logger('FeatureService')
-  private readonly findManyMaxCacheTime = process.env.REDIS_QUERY_FIND_MANY_MAX_TIME
-    ? +process.env.REDIS_QUERY_FIND_MANY_MAX_TIME
-    : 3600
 
   constructor(private readonly prismaService: PrismaService, private readonly redisService: RedisService) {}
 
   public async findMany(queryFeatureDto: QueryFeatureDto) {
-    const { tenant_id, status, name } = queryFeatureDto
     const key = ['feature', ...serializeKeysAndValues(queryFeatureDto)].join(':')
     const cache = await this.redisService.get(key)
 
@@ -23,13 +27,7 @@ export class FeatureService {
     }
 
     const features = await this.prismaService.feature.findMany({
-      where: {
-        tenant_id,
-        name: {
-          contains: name,
-        },
-        status,
-      },
+      where: FeatureService.buildFindManyWhere(queryFeatureDto),
     })
 
     this.setFindManyCache(key, serializeJsonString(serializeData(features)))
@@ -58,6 +56,19 @@ export class FeatureService {
     return result
   }
 
+  private static buildFindManyWhere(queryFeatureDto: QueryFeatureDto) {
+    const { tenant_id, name, status } = queryFeatureDto
+    const where: Prisma.featureWhereInput = {
+      tenant_id,
+      name: {
+        contains: name,
+      },
+    }
+    const [statusList] = [serializeToArray<FeatureStatus>(status)]
+    statusList.length && (where.status = statusList.length === 1 ? statusList[0] : { in: statusList })
+    return where
+  }
+
   private create(payload: SaveFeatureDto) {
     return this.prismaService.feature.create({ data: payload } as any)
   }
@@ -71,7 +82,7 @@ export class FeatureService {
 
   private setFindManyCache(key: string, value: string) {
     try {
-      this.redisService.set(key, value, 'EX', this.findManyMaxCacheTime)
+      this.redisService.set(key, value, 'EX', REDIS_QUERY_FIND_MANY_MAX_TIME)
     } catch (e: any) {
       this.logger.error(`setFindManyCache ${key}:[${e?.message}]`)
     }

@@ -7,10 +7,20 @@ import sdk from '@micro/sdk'
 const element = document.getElementById('root')
 
 if (element) {
-  const envs = (window as any)?.RUNTIME_ENV as Record<string, any> | null
-  envs && sdk.app.setEnvs(envs)
+  bootstrap(element)
+}
+
+function setEnvs() {
+  const envs = (window as any)?.RUNTIME_ENV
+  if (envs) {
+    sdk.app.setEnvs(envs)
+  }
+}
+
+function bootstrap(target: HTMLElement) {
+  setEnvs()
 
   httpClient.initialize(sdk.app.envs.API_GATEWAY)
 
-  createRoot(element).render(<App />)
+  createRoot(target).render(<App />)
 }

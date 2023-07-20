@@ -1,11 +1,14 @@
 import { App as AppModel } from '../../model'
+import { logger } from '../../utils'
 
 class App {
   private currentEnv: Record<string, any> = {}
   private apps: AppModel[] = []
 
   public setEnvs(payload: Record<string, any>) {
-    this.currentEnv = { ...this.currentEnv, ...payload }
+    const current = { ...this.currentEnv, ...payload }
+    this.currentEnv = current
+    logger.info('set envs', current)
   }
 
   public set(payload: AppModel[]) {

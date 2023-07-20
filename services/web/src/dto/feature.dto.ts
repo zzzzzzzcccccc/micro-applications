@@ -14,9 +14,9 @@ export class QueryFeatureDto {
   @Length(1, 100)
   name?: string
 
-  @IsEnum(FeatureStatus)
+  @IsEnum(FeatureStatus, { each: true })
   @IsOptional()
-  status?: FeatureStatus
+  status?: FeatureStatus | FeatureStatus[]
 }
 
 export class SaveFeatureDto<T = null> {

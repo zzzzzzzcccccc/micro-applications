@@ -9,6 +9,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_QUERY_FIND_MANY_MAX_TIME=3600
+      - RATE_TTL=60
+      - RATE_LIMIT=60
     build:
       context: .
       dockerfile: Dockerfile

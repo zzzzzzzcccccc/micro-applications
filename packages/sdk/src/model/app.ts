@@ -1,12 +1,4 @@
-export enum AppMode {
-  APPLICATION = 'APPLICATION',
-  COMPONENT = 'COMPONENT',
-}
-
-export enum AppStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
+import { AppFrame, AppMode, AppStatus } from '../enums'
 
 export interface RemoteModule {
   appName: string
@@ -22,7 +14,7 @@ export interface App {
   id: string
   name: string
   path?: string
-  frame: 'REACT' | 'VUE'
+  frame: AppFrame
   mode: AppMode
   status: AppStatus
   created_at: string

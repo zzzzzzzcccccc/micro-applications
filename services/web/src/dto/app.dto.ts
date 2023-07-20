@@ -9,17 +9,17 @@ export class QueryAppDto {
   @IsOptional()
   name?: string
 
-  @IsEnum(AppMode)
+  @IsEnum(AppMode, { each: true })
   @IsOptional()
-  mode?: AppMode
+  mode?: AppMode | AppMode[]
 
-  @IsEnum(AppFrame)
+  @IsEnum(AppFrame, { each: true })
   @IsOptional()
-  frame?: AppFrame
+  frame?: AppFrame | AppFrame[]
 
-  @IsEnum(AppStatus)
+  @IsEnum(AppStatus, { each: true })
   @IsOptional()
-  status?: AppStatus
+  status?: AppStatus | AppStatus[]
 }
 
 export class SaveAppDto<T = null> {

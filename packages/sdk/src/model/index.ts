@@ -1,1 +1,2 @@
-export type { App, RemoteModule, AppType } from './app'
+export type { App, AppMetadata } from './app'
+export type { Feature, FeatureMetadata } from './feature'
