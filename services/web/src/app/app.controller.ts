@@ -15,10 +15,10 @@ export class AppController {
     return this.appService.findMany(queryAppDto)
   }
 
-  @Get('/:tenant_id/:id')
+  @Get('/:id')
   @UseInterceptors(ResponseSerializerInterceptor)
-  findById(@Param('tenant_id') tenant_id: string, @Param('id') id: string) {
-    return this.appService.findById(id, tenant_id)
+  findById(@Param('id') id: string) {
+    return this.appService.findById(id)
   }
 
   @Post('/')
@@ -33,8 +33,8 @@ export class AppController {
     return this.appService.save({ ...saveAppDto, id })
   }
 
-  @Delete('/:tenant_id/:id')
-  deleteById(@Param('tenant_id') tenant_id: string, @Param('id') id: string) {
-    return this.appService.deleteById(id, tenant_id)
+  @Delete('/:id')
+  deleteById(@Param('id') id: string) {
+    return this.appService.deleteById(id)
   }
 }

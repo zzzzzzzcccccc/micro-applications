@@ -1,7 +1,5 @@
 import { Prisma } from './client'
 
-const tenant_id = 'local-tenant'
-
 const apps: Prisma.appCreateInput[] = [
   {
     name: 'home',
@@ -9,7 +7,6 @@ const apps: Prisma.appCreateInput[] = [
     mode: 'APPLICATION',
     frame: 'REACT',
     status: 'ACTIVE',
-    tenant_id,
     metadata: {
       development: {
         remoteModule: {
@@ -26,7 +23,6 @@ const apps: Prisma.appCreateInput[] = [
     mode: 'APPLICATION',
     frame: 'VUE',
     status: 'ACTIVE',
-    tenant_id,
     metadata: {
       development: {
         remoteModule: {
@@ -43,7 +39,6 @@ const apps: Prisma.appCreateInput[] = [
     mode: 'APPLICATION',
     frame: 'REACT',
     status: 'ACTIVE',
-    tenant_id,
     metadata: {
       development: {
         remoteModule: {
@@ -59,7 +54,6 @@ const apps: Prisma.appCreateInput[] = [
     mode: 'COMPONENT',
     frame: 'REACT',
     status: 'ACTIVE',
-    tenant_id,
     metadata: {
       development: {
         remoteModule: {
@@ -75,7 +69,6 @@ const apps: Prisma.appCreateInput[] = [
     mode: 'COMPONENT',
     frame: 'VUE',
     status: 'ACTIVE',
-    tenant_id,
     metadata: {
       development: {
         remoteModule: {

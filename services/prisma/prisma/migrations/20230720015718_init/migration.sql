@@ -13,7 +13,6 @@ CREATE TYPE "feature_status" AS ENUM ('ACTIVE', 'INACTIVE', 'ROLLOUT');
 -- CreateTable
 CREATE TABLE "app" (
     "id" BIGSERIAL NOT NULL,
-    "tenant_id" VARCHAR(50) NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "path" VARCHAR(100),
     "mode" "app_mode" NOT NULL DEFAULT 'APPLICATION',
@@ -39,9 +38,6 @@ CREATE TABLE "feature" (
 
     CONSTRAINT "feature_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE INDEX "app_tenant_id_idx" ON "app"("tenant_id");
 
 -- CreateIndex
 CREATE INDEX "app_name_idx" ON "app"("name");

@@ -3,11 +3,6 @@ import { Transform } from 'class-transformer'
 import { AppMode, AppStatus, AppFrame } from '../enums'
 
 export class QueryAppDto {
-  @IsNotEmpty()
-  @Transform(({ value }) => value.trim())
-  @Length(1, 50)
-  tenant_id: string
-
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @Length(1, 100)
@@ -30,11 +25,6 @@ export class QueryAppDto {
 export class SaveAppDto<T = null> {
   @IsOptional()
   id?: string
-
-  @IsNotEmpty()
-  @Transform(({ value }) => value.trim())
-  @Length(1, 50)
-  tenant_id: string
 
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()

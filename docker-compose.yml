@@ -8,6 +8,7 @@ services:
       - DATABASE_URL=postgresql://postgres:dummy_password@db:5432/localdb?schema=public
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - REDIS_QUERY_FIND_MANY_MAX_TIME=3600
     build:
       context: .
       dockerfile: Dockerfile
