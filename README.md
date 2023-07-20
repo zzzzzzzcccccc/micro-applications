@@ -9,6 +9,7 @@ Micro front-end framework, support react or vue
 | Name | Docs |
 |------|-------------|
 | Configuration |  [Doc](packages/configuration/README.md)          |
+| Logger        | [Doc](packages/logger/README.md)
 | Sdk          |  [Doc](packages/sdk/README.md)            |
 | Hooks      |  [Doc](packages/hooks/README.md)            |
 
