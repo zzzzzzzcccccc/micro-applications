@@ -8,10 +8,11 @@
     "build": "webpack --mode production --config ./webpack.config.js"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "react": "^18.2.0"
   },
   "devDependencies": {
-    "@micro/configuration": "^0.0.1"
+    "@micro/configuration": "^0.0.1",
+    "@types/react": "^18.2.14"
   },
   "browserslist": [
     "> 1%",

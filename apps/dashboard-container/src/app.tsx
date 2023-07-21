@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <div>
-      dashboard-panel by react-component
+      dashboard-container by react-component
       <input value={message} onChange={handleOnChange} />
     </div>
   )

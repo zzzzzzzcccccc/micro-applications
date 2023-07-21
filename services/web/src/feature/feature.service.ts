@@ -9,7 +9,7 @@ import {
   serializeKeysAndValues,
   serializeToArray,
 } from '../util/serialize'
-import { REDIS_QUERY_FIND_MANY_MAX_TIME } from '../constants'
+import { REDIS_QUERY_FIND_MANY_MAX_TIME, FIND_FEATURES_REDIS_TAG } from '../constants'
 import { FeatureStatus } from '../enums'
 
 @Injectable()
@@ -19,7 +19,10 @@ export class FeatureService {
   constructor(private readonly prismaService: PrismaService, private readonly redisService: RedisService) {}
 
   public async findMany(queryFeatureDto: QueryFeatureDto) {
-    const key = ['feature', ...serializeKeysAndValues(queryFeatureDto)].join(':')
+    const { tenant_id, ...context } = queryFeatureDto
+    const key = serializeKeysAndValues(context).length
+      ? [FIND_FEATURES_REDIS_TAG, tenant_id, ...serializeKeysAndValues(context)].join(':')
+      : `${FIND_FEATURES_REDIS_TAG}:${tenant_id}:ALL`
     const cache = await this.redisService.get(key)
 
     if (cache) {
@@ -88,12 +91,12 @@ export class FeatureService {
     }
   }
 
-  private removeFindManyCache(tenant_id: string) {
-    const key = `feature:${tenant_id}:*`
+  private async removeFindManyCache(tenant_id: string) {
     try {
-      this.redisService.del(key)
+      const keys = await this.redisService.keys(`${FIND_FEATURES_REDIS_TAG}:${tenant_id}:*`)
+      await this.redisService.del(keys)
     } catch (e: any) {
-      this.logger.error(`removeFindManyCache ${key}:[${e?.message}]`)
+      this.logger.error(`removeFindManyCache ${FIND_FEATURES_REDIS_TAG}:[${e?.message}]`)
     }
   }
 }

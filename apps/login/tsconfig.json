@@ -1,6 +1,0 @@
-{
-  "extends": "../../base.tsconfig.json",
-  "compilerOptions": {},
-  "include": ["src"],
-  "exclude": ["dist", "node_modules"]
-}

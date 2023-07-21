@@ -43,7 +43,6 @@ enum app_mode {
 
 enum app_frame {
   REACT
-  VUE
 }
 
 enum app_status {

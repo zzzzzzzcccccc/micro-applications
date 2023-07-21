@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "yarn run start:libs & sleep 10 && yarn run start:apps",
-    "start:libs": "lerna run start --stream --scope @micro/*",
+    "start:libs": "lerna watch -- lerna run build --stream --scope @micro/*",
     "start:apps": "lerna run start --stream --scope @app/*",
     "start:service:web": "yarn workspace @service/web start",
     "build:libs": "lerna run build --stream --scope @micro/*",
@@ -61,7 +61,6 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
-    "@vue/compiler-sfc": "^3.3.4",
     "babel-loader": "^9.1.2",
     "clean-webpack-plugin": "^4.0.0",
     "conventional-changelog-cli": "^3.0.0",
@@ -96,7 +95,6 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6",
     "url-loader": "^4.1.1",
-    "vue-loader": "^17.2.2",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"

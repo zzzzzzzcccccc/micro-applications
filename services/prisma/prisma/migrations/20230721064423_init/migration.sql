@@ -2,7 +2,7 @@
 CREATE TYPE "app_mode" AS ENUM ('APPLICATION', 'COMPONENT');
 
 -- CreateEnum
-CREATE TYPE "app_frame" AS ENUM ('REACT', 'VUE');
+CREATE TYPE "app_frame" AS ENUM ('REACT');
 
 -- CreateEnum
 CREATE TYPE "app_status" AS ENUM ('ACTIVE', 'INACTIVE');

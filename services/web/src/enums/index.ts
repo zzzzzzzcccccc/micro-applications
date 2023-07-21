@@ -10,7 +10,6 @@ export enum AppStatus {
 
 export enum AppFrame {
   REACT = 'REACT',
-  VUE = 'VUE',
 }
 
 export enum FeatureStatus {

@@ -1,10 +1,12 @@
 import { Feature as FeatureModel } from '../../model'
+import { logger } from '../../utils'
 
 class Feature {
   private features: FeatureModel[] = []
 
   public set(payload: FeatureModel[]) {
     this.features = payload
+    logger.info('Set features', this.features)
   }
 
   public isActive(name: string, defaultValue = false) {

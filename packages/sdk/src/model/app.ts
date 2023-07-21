@@ -20,4 +20,5 @@ export interface App {
   created_at: string
   updated_at: string
   metadata: Record<string, AppMetadata>
+  [field: string]: any
 }

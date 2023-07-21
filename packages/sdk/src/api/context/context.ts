@@ -3,21 +3,21 @@ type IContext = Record<string, any>
 type Callback = (payload: IContext) => void
 
 class Context {
-  private cbs: Map<string, Set<Callback>> = new Map()
+  private cbs: Record<string, Callback[]> = {}
   private contexts: Map<string, IContext> = new Map()
 
   public on(nameSpace: NameSpace, callback: Callback) {
-    const item = this.cbs.get(nameSpace)
-    const cbs = item ? item.add(callback) : new Set([callback])
-    this.cbs.set(nameSpace, cbs)
-
+    if (this.cbs[nameSpace]) {
+      this.cbs[nameSpace].push(callback)
+    } else {
+      this.cbs[nameSpace] = [callback]
+    }
     return () => this.off(nameSpace, callback)
   }
 
   public off(nameSpace: NameSpace, callback: Callback) {
-    const item = this.cbs.get(nameSpace)
-    if (item?.size) {
-      item.delete(callback)
+    if (this.cbs[nameSpace]) {
+      this.cbs[nameSpace] = this.cbs[nameSpace].filter((cb) => cb !== callback)
     }
   }
 
@@ -35,13 +35,12 @@ class Context {
 
   public clean(nameSpace: string) {
     this.contexts.delete(nameSpace)
-    this.cbs.delete(nameSpace)
+    this.cbs = {}
   }
 
   private emitCallbacks(nameSpace: string, context: IContext) {
-    const item = this.cbs.get(nameSpace)
-    if (item?.size) {
-      item.forEach((cb) => cb(context))
+    if (this.cbs[nameSpace]) {
+      this.cbs[nameSpace].forEach((cb) => cb(context))
     }
   }
 }

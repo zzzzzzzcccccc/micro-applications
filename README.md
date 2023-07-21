@@ -18,10 +18,10 @@ Micro front-end framework, support react or vue
 |------|-------------|
 | runtime | Host application by react   |
 | home | Child application by react   |
-| login | Child application by vue |
-| dashboard | Child application by react and vue |
-| dashboard-panel | Child application by react in dashboard |
-| dashboard-container | Child application by vue in dashboard |
+| login | Child application by react-component |
+| dashboard | Child application by react |
+| dashboard-panel | Child application by react-component in dashboard |
+| dashboard-container | Child application by react-component in dashboard |
 
 ### services
 

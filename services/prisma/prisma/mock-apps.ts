@@ -21,7 +21,7 @@ const apps: Prisma.appCreateInput[] = [
     name: 'login',
     path: '/login',
     mode: 'APPLICATION',
-    frame: 'VUE',
+    frame: 'REACT',
     status: 'ACTIVE',
     metadata: {
       development: {
@@ -67,7 +67,7 @@ const apps: Prisma.appCreateInput[] = [
   {
     name: 'dashboard-container',
     mode: 'COMPONENT',
-    frame: 'VUE',
+    frame: 'REACT',
     status: 'ACTIVE',
     metadata: {
       development: {

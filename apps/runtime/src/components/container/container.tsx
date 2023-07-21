@@ -1,35 +1,56 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { ContainerProps } from './types'
 import sdk from '@micro/sdk'
 
+enum ModuleState {
+  PENDING = 'PENDING',
+  DONE = 'DONE',
+  ERROR = 'ERROR',
+}
+
 function Container(props: ContainerProps) {
   const { className, style } = props
+  const [moduleState, setModuleState] = useState(ModuleState.PENDING)
   const ref = useRef<HTMLDivElement | null>(null)
   const { name } = useParams()
   const app = sdk.app.findByName(name as string)
 
-  useEffect(() => {
-    let unmount: () => void
-    if (app?.remoteModule) {
+  const mounted = useCallback(async () => {
+    try {
+      setModuleState(ModuleState.PENDING)
+
+      const module = await sdk.remoteModule.load(app.remoteModule)
       const target = ref.current as HTMLDivElement
-      const el = document.createElement('div')
+      const unmount = module.default(target)
 
-      target.innerHTML = ''
-      el.className = name as string
+      target.className = name as string
 
-      sdk.remoteModule.load(app.remoteModule).then((module) => {
-        target.appendChild(el)
-        unmount = module.default(el)
-      })
-    }
+      setModuleState(ModuleState.DONE)
 
-    return () => {
-      unmount?.()
+      return () => {
+        unmount()
+      }
+    } catch (e) {
+      setModuleState(ModuleState.ERROR)
+      return null
     }
   }, [app, name])
 
-  return <div className={className} style={style} ref={ref} />
+  useEffect(() => {
+    let unmount: (() => void) | null = null
+    mounted().then((result) => (unmount = result))
+    return () => {
+      unmount?.()
+    }
+  }, [app, name, mounted])
+
+  return (
+    <div className={className} style={style}>
+      {moduleState === ModuleState.PENDING && 'loading...'}
+      <div key={name} ref={ref} style={{ display: moduleState !== ModuleState.DONE ? 'none' : 'block' }} />
+    </div>
+  )
 }
 
 export default Container

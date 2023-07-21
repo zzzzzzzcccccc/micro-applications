@@ -6,13 +6,13 @@ class App {
   private apps: AppModel[] = []
 
   public setEnvs(payload: Record<string, any>) {
-    const current = { ...this.currentEnv, ...payload }
-    this.currentEnv = current
-    logger.info('set envs', current)
+    this.currentEnv = { ...this.currentEnv, ...payload }
+    logger.info('Set envs', this.currentEnv)
   }
 
   public set(payload: AppModel[]) {
     this.apps = payload.map((app) => this.transformApp(app))
+    logger.info('Set apps', this.apps)
   }
 
   public findByName(target: string) {

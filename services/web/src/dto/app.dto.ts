@@ -13,10 +13,6 @@ export class QueryAppDto {
   @IsOptional()
   mode?: AppMode | AppMode[]
 
-  @IsEnum(AppFrame, { each: true })
-  @IsOptional()
-  frame?: AppFrame | AppFrame[]
-
   @IsEnum(AppStatus, { each: true })
   @IsOptional()
   status?: AppStatus | AppStatus[]

@@ -9,8 +9,8 @@ import {
   serializeData,
   serializeToArray,
 } from '../util/serialize'
-import { REDIS_QUERY_FIND_MANY_MAX_TIME } from '../constants'
-import { AppStatus, AppMode, AppFrame } from '../enums'
+import { REDIS_QUERY_FIND_MANY_MAX_TIME, FIND_APPS_REDIS_TAG } from '../constants'
+import { AppStatus, AppMode } from '../enums'
 
 @Injectable()
 export class AppService {
@@ -19,7 +19,9 @@ export class AppService {
   constructor(private readonly prismaService: PrismaService, private readonly redisService: RedisService) {}
 
   public async findMany(queryAppDto: QueryAppDto) {
-    const key = ['app', ...serializeKeysAndValues(queryAppDto)].join(':')
+    const key = serializeKeysAndValues(queryAppDto).length
+      ? [FIND_APPS_REDIS_TAG, ...serializeKeysAndValues(queryAppDto)].join(':')
+      : `${FIND_APPS_REDIS_TAG}:ALL`
     const cache = await this.redisService.get(key)
     if (cache) {
       return serializeJsonParse(cache, [])
@@ -51,20 +53,15 @@ export class AppService {
   }
 
   private static buildFindManyWhere(queryAppDto: QueryAppDto) {
-    const { status, mode, name, frame } = queryAppDto
+    const { status, mode, name } = queryAppDto
     const where: Prisma.appWhereInput = {
       name: {
         contains: name,
       },
     }
-    const [statusList, modeList, frameList] = [
-      serializeToArray<AppStatus>(status),
-      serializeToArray<AppMode>(mode),
-      serializeToArray<AppFrame>(frame),
-    ]
+    const [statusList, modeList] = [serializeToArray<AppStatus>(status), serializeToArray<AppMode>(mode)]
     statusList.length && (where.status = statusList.length === 1 ? statusList[0] : { in: statusList })
     modeList.length && (where.mode = modeList.length === 1 ? modeList[0] : { in: modeList })
-    frameList.length && (where.frame = frameList.length === 1 ? frameList[0] : { in: frameList })
 
     return where
   }
@@ -88,12 +85,12 @@ export class AppService {
     }
   }
 
-  private removeFindManyCache() {
-    const key = 'app:*'
+  private async removeFindManyCache() {
     try {
-      this.redisService.del(key)
+      const keys = await this.redisService.keys(`${FIND_APPS_REDIS_TAG}:*`)
+      keys.length && (await this.redisService.del(...keys))
     } catch (e: any) {
-      this.logger.error(`removeFindManyCache ${key}:[${e?.message}]`)
+      this.logger.error(`removeFindManyCache ${FIND_APPS_REDIS_TAG}:[${e?.message}]`)
     }
   }
 }

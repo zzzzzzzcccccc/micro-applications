@@ -7,9 +7,9 @@ export enum LogLevel {
 
 const colorMapper = {
   [LogLevel.ERROR]: 'color: red',
-  [LogLevel.WARN]: 'color: yellow',
-  [LogLevel.INFO]: 'color: green',
-  [LogLevel.DEBUG]: 'color: blue',
+  [LogLevel.WARN]: 'color: orange',
+  [LogLevel.INFO]: 'color: blue',
+  [LogLevel.DEBUG]: 'color: purple',
 }
 
 class Logger {
@@ -35,13 +35,14 @@ class Logger {
     if (this.disabled) {
       return
     }
-    console.log(colorMapper, level)
     if (this.shouldLog(level)) {
       const color = colorMapper[level]
       const timestamp = new Date().toISOString()
       const title = `[${timestamp}]%c[${this.namespace}][${level}][${message}]`
       console.groupCollapsed(title, color)
-      console.trace(this.formatArgs(args).join(','))
+      if (args?.length) {
+        console.trace(this.formatArgs(args).join(','))
+      }
       console.groupEnd()
     }
   }

@@ -47,11 +47,3 @@ export function buildModuleRuleByCss({ publicPath }: { publicPath: string }) {
     },
   ] as webpack.RuleSetRule[]
 }
-
-export function buildModuleRuleByVue() {
-  return {
-    test: /\.vue$/i,
-    exclude: /node_modules/,
-    use: 'vue-loader',
-  }
-}

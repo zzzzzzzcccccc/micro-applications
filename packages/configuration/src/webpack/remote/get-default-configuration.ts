@@ -3,8 +3,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
-import { VueLoaderPlugin } from 'vue-loader'
-import { buildModuleRuleByUrl, buildModuleRuleByBabel, buildModuleRuleByVue, buildModuleRuleByCss } from '../../utils'
+import { buildModuleRuleByUrl, buildModuleRuleByBabel, buildModuleRuleByCss } from '../../utils'
 import * as webpack from 'webpack'
 
 const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
@@ -21,14 +20,12 @@ const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
     },
     devtool: isDev ? 'eval-source-map' : 'source-map',
     module: {
-      rules: [
-        buildModuleRuleByUrl({ publicPath: staticPath, limit: 0 }),
-        buildModuleRuleByVue(),
-        buildModuleRuleByBabel(),
-      ].concat(buildModuleRuleByCss({ publicPath: staticPath }) as any[]),
+      rules: [buildModuleRuleByUrl({ publicPath: staticPath, limit: 0 }), buildModuleRuleByBabel()].concat(
+        buildModuleRuleByCss({ publicPath: staticPath }) as any[],
+      ),
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.vue'],
+      extensions: ['.ts', '.tsx', '.js'],
     },
     optimization: {
       runtimeChunk: false,
@@ -40,7 +37,6 @@ const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash:6].css',
       }),
-      new VueLoaderPlugin(),
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),
