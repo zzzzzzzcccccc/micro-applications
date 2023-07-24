@@ -1,16 +1,14 @@
 version: '3'
 
+# Global variables
+x-global-vars: &global-vars
+  CORS_WHITELIST: http://localhost:3333
+  DATABASE_URL: postgresql://postgres:dummy_password@db:5432/localdb?schema=public
+  RATE_TTL: 60
+  RATE_LIMIT: 60
+
 services:
   common: &BASE
-    environment:
-      - PORT=4000
-      - CORS_WHITELIST=http://localhost:3333
-      - DATABASE_URL=postgresql://postgres:dummy_password@db:5432/localdb?schema=public
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_QUERY_FIND_MANY_MAX_TIME=3600
-      - RATE_TTL=60
-      - RATE_LIMIT=60
     build:
       context: .
       dockerfile: Dockerfile
@@ -42,6 +40,8 @@ services:
   db-migrate:
     <<: *BASE
     command: yarn migrate:deploy
+    environment:
+      <<: *global-vars
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -51,9 +51,12 @@ services:
     depends_on:
       - db
 
-  web-service:
+  app-service:
     <<: *BASE
-    command: yarn start:service:web
+    command: yarn start:service:app
+    environment:
+      <<: *global-vars
+      PORT: 4001
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -62,9 +65,37 @@ services:
       - docker-net
     depends_on:
       - db
-      - redis
     ports:
-      - 4000:4000
+      - 4001:4001
+
+  feature-service:
+    <<: *BASE
+    command: yarn start:service:feature
+    environment:
+      <<: *global-vars
+      PORT: 4002
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/services/prisma/prisma/client
+    networks:
+      - docker-net
+    depends_on:
+      - db
+    ports:
+      - 4002:4002
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 4000:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app-service
+      - feature-service
+    networks:
+      - docker-net
 
 networks:
   docker-net:

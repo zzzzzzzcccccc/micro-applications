@@ -1,7 +1,5 @@
 # Micro Applications
 
-Micro front-end framework, support react or vue
-
 ## Modules
 
 ### libs
@@ -28,18 +26,7 @@ Micro front-end framework, support react or vue
 | Name | Description |
 | ------ | ------ |
 | prisma | Database service |
-| web | Web service |
+| core   | Core service |
+| app | App service |
+| feature | Feature service |
 
-## Setup
-
-### ui
-
-```shell
-yarn start
-```
-
-### services
-
-```shell
-yarn start:service:web
-```

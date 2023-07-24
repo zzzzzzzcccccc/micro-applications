@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Patch, Delete, Query, Param, Body, UseInterceptors } from '@nestjs/common'
+import { ResponseSerializerInterceptor, QueryAppDto, SaveAppDto } from '@service/core'
 import { ApiTags } from '@nestjs/swagger'
 import { AppService } from './app.service'
-import { SaveAppDto, QueryAppDto } from '../dto/app.dto'
-import { ResponseSerializerInterceptor } from '../interceptor/response-serializer.interceptor'
 
 @ApiTags('app')
-@Controller('app')
+@Controller('/app')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 

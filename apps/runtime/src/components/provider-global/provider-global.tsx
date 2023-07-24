@@ -35,7 +35,7 @@ export default function ProviderGlobal({ children }: { children: React.ReactNode
     }
 
     mounted()
-  }, [fetchApps])
+  }, [fetchFeatures, fetchApps])
 
   return loading ? 'loading...' : children
 }

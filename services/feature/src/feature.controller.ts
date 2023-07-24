@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Query, UseInterceptors, Body, Patch, Param, Delete } from '@nestjs/common'
+import { ResponseSerializerInterceptor, QueryFeatureDto, SaveFeatureDto } from '@service/core'
 import { ApiTags } from '@nestjs/swagger'
 import { FeatureService } from './feature.service'
-import { ResponseSerializerInterceptor } from '../interceptor/response-serializer.interceptor'
-import { QueryFeatureDto, SaveFeatureDto } from '../dto/feature.dto'
 
 @ApiTags('feature')
 @Controller('feature')

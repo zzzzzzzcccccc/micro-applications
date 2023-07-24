@@ -9,10 +9,10 @@
     "services/*"
   ],
   "scripts": {
-    "start": "yarn run start:libs & sleep 10 && yarn run start:apps",
-    "start:libs": "lerna watch -- lerna run build --stream --scope @micro/*",
+    "start": "yarn build:libs && yarn start:apps",
     "start:apps": "lerna run start --stream --scope @app/*",
-    "start:service:web": "yarn workspace @service/web start",
+    "start:service:app": "yarn workspace @service/app start",
+    "start:service:feature": "yarn workspace @service/feature start",
     "build:libs": "lerna run build --stream --scope @micro/*",
     "build:apps": "lerna run build --stream --scope @app/*",
     "migrate:deploy": "yarn workspace @service/prisma migrate:deploy",

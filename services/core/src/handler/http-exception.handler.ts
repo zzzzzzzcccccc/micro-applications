@@ -56,7 +56,10 @@ export class HttpExceptionHandler implements ExceptionFilter {
     response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(body)
   }
 
-  static formatMessage<T>(message: T): string | T {
+  static formatMessage(message: string | string[]) {
+    if (!message) {
+      return message
+    }
     if (Array.isArray(message)) {
       return message.join(',')
     }
