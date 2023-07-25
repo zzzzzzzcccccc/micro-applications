@@ -1,5 +1,5 @@
 import { LoadPayload } from './types'
-import { addScript, loadModule } from '../../utils'
+import { addScript, loadModule, logger } from '../../utils'
 
 class RemoteModule {
   private cache = new Map<string, any>()
@@ -16,6 +16,7 @@ class RemoteModule {
     await addScript(url)
     const module = await loadModule<T>({ appName, remotePath })
     this.cache.set(key, module)
+    logger.info(`RemoteModule load ${key}`, payload)
     return module
   }
 

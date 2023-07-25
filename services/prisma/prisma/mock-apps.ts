@@ -10,7 +10,7 @@ const apps: Prisma.appCreateInput[] = [
     metadata: {
       development: {
         remoteModule: {
-          url: 'http://localhost:3334/home_app/v0.0.1/remoteEntry.js',
+          url: 'http://localhost:3334/home_app/{{home_app_version:-v0.0.1}}/remoteEntry.js',
           appName: 'home_app',
           remotePath: './App',
         },
@@ -26,7 +26,7 @@ const apps: Prisma.appCreateInput[] = [
     metadata: {
       development: {
         remoteModule: {
-          url: 'http://localhost:3335/login_app/v0.0.1/remoteEntry.js',
+          url: 'http://localhost:3335/login_app/{{login_app_version:-v0.0.1}}/remoteEntry.js',
           appName: 'login_app',
           remotePath: './App',
         },
@@ -42,7 +42,7 @@ const apps: Prisma.appCreateInput[] = [
     metadata: {
       development: {
         remoteModule: {
-          url: 'http://localhost:3336/dashboard_app/v0.0.1/remoteEntry.js',
+          url: 'http://localhost:3336/dashboard_app/{{dashboard_app_version:-v0.0.1}}/remoteEntry.js',
           appName: 'dashboard_app',
           remotePath: './App',
         },

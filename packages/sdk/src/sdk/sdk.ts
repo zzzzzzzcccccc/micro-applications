@@ -1,4 +1,5 @@
 import { Feature, App, Navigation, RemoteModule, Context } from '../api'
+import { Options } from './types'
 
 class Sdk {
   public feature: Feature
@@ -7,10 +8,12 @@ class Sdk {
   public remoteModule: RemoteModule
   public context: Context
 
-  constructor() {
+  constructor(options: Options) {
+    const { historyMode } = options
+
     this.feature = new Feature()
-    this.app = new App()
-    this.navigation = new Navigation()
+    this.app = new App({ feature: this.feature })
+    this.navigation = new Navigation({ historyMode })
     this.remoteModule = new RemoteModule()
     this.context = new Context()
   }

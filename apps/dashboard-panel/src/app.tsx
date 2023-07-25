@@ -9,7 +9,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    const off = sdk.context.on('dashboard', (context: Record<string, any>) => {
+    const off = sdk.context.on('dashboard', (context) => {
       setMessage(context?.message || '')
     })
     return () => off()

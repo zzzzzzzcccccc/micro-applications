@@ -76,6 +76,7 @@ const getDefaultConfiguration = (options: Partial<DefaultOptions>) => {
       minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
     },
     devServer: {
+      historyApiFallback: true,
       allowedHosts: 'all',
       open: false,
       port: devServerPort,

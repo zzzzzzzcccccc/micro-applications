@@ -13,6 +13,7 @@
     "start:apps": "lerna run start --stream --scope @app/*",
     "start:service:app": "yarn workspace @service/app start",
     "start:service:feature": "yarn workspace @service/feature start",
+    "start:service:storage": "yarn workspace @service/storage start",
     "build:libs": "lerna run build --stream --scope @micro/*",
     "build:apps": "lerna run build --stream --scope @app/*",
     "migrate:deploy": "yarn workspace @service/prisma migrate:deploy",

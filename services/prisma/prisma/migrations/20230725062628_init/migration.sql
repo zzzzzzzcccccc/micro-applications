@@ -10,6 +10,12 @@ CREATE TYPE "app_status" AS ENUM ('ACTIVE', 'INACTIVE');
 -- CreateEnum
 CREATE TYPE "feature_status" AS ENUM ('ACTIVE', 'INACTIVE', 'ROLLOUT');
 
+-- CreateEnum
+CREATE TYPE "storage_provider" AS ENUM ('AWS', 'MINIO');
+
+-- CreateEnum
+CREATE TYPE "storage_status" AS ENUM ('ACTIVE', 'INACTIVE');
+
 -- CreateTable
 CREATE TABLE "app" (
     "id" BIGSERIAL NOT NULL,
@@ -39,6 +45,19 @@ CREATE TABLE "feature" (
     CONSTRAINT "feature_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "storage" (
+    "id" BIGSERIAL NOT NULL,
+    "tenant_id" VARCHAR(50) NOT NULL,
+    "provider" "storage_provider" NOT NULL,
+    "status" "storage_status" NOT NULL DEFAULT 'ACTIVE',
+    "metadata" JSONB,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "storage_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "app_name_idx" ON "app"("name");
 
@@ -47,3 +66,6 @@ CREATE INDEX "feature_tenant_id_idx" ON "feature"("tenant_id");
 
 -- CreateIndex
 CREATE INDEX "feature_status_idx" ON "feature"("status");
+
+-- CreateIndex
+CREATE INDEX "storage_tenant_id_idx" ON "storage"("tenant_id");

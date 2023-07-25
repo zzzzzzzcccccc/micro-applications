@@ -9,7 +9,7 @@ export default function bootstrap<Element extends HTMLElement>(el: Element) {
     initialEntries: [sdk.navigation.pathname],
   })
   const app = createRoot(el)
-  app.render(<App />)
+  app.render(<App history={history} />)
 
   const unbind = sdk.navigation.on(({ location }) => {
     if (location.pathname !== history.location.pathname) {

@@ -17,3 +17,13 @@ export enum FeatureStatus {
   INACTIVE = 'INACTIVE',
   ROLLOUT = 'ROLLOUT',
 }
+
+export enum StorageProvider {
+  AWS = 'AWS',
+  MINIO = 'MINIO',
+}
+
+export enum StorageStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}

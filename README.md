@@ -29,4 +29,5 @@
 | core   | Core service |
 | app | App service |
 | feature | Feature service |
+| storage | Storage service |
 

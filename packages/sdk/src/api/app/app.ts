@@ -1,9 +1,15 @@
-import { App as AppModel } from '../../model'
+import { App as AppModel, AppMetadata } from '../../model'
 import { logger } from '../../utils'
+import { Options } from './types'
 
 class App {
   private currentEnv: Record<string, any> = {}
   private apps: AppModel[] = []
+  private readonly feature: Options['feature']
+
+  constructor({ feature }: Options) {
+    this.feature = feature
+  }
 
   public setEnvs(payload: Record<string, any>) {
     this.currentEnv = { ...this.currentEnv, ...payload }
@@ -27,7 +33,25 @@ class App {
     const { BUILD_ENV = 'development' } = this.currentEnv
     return {
       ...payload,
-      ...payload.metadata[BUILD_ENV],
+      ...this.transformMetadata(payload.metadata[BUILD_ENV]),
+    }
+  }
+
+  private transformMetadata(metadata: AppMetadata) {
+    this.transformRemoteModule(metadata)
+    return metadata
+  }
+
+  private transformRemoteModule(metadata: AppMetadata) {
+    if (!metadata.remoteModule) return
+    const regex = /{{([^{}]+)}}/
+    const match = (metadata.remoteModule.url || '').match(regex)
+    if (match && match.length) {
+      const value = match[1].trim()
+      const [featureName, defaultValue] = value.split(':-')
+      const feature = this.feature.getByName(featureName)
+      const target = feature ? feature.value : defaultValue
+      metadata.remoteModule.url = metadata.remoteModule.url.replace(regex, target || '')
     }
   }
 

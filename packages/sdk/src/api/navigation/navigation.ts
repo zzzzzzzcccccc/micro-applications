@@ -1,11 +1,14 @@
-import { createHashHistory } from 'history'
-import { Callback, Update, To } from './types'
+import { createBrowserHistory, createHashHistory, Update, To, BrowserHistory, HashHistory } from 'history'
+import { Options, Callback } from './types'
+import { logger } from '../../utils'
 
 class Navigation {
-  private history = createHashHistory()
+  private history: BrowserHistory | HashHistory
   private subscribers: Set<Callback> = new Set()
 
-  constructor() {
+  constructor(options: Options) {
+    const { historyMode } = options
+    this.history = historyMode === 'hash' ? createHashHistory() : createBrowserHistory()
     this.history.listen(this.handleHistoryChange.bind(this))
   }
 
@@ -46,6 +49,7 @@ class Navigation {
   }
 
   private handleHistoryChange(update: Update) {
+    logger.info('Navigation change', update)
     if (this.subscribers.size) {
       this.subscribers.forEach((callback) => callback(update))
     }

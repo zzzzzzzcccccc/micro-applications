@@ -1,23 +1,23 @@
-type NameSpace = string
-type IContext = Record<string, any>
-type Callback = (payload: IContext) => void
+import { NameSpace, Callback, IContext } from './types'
+import { logger } from '../../utils'
 
 class Context {
-  private cbs: Record<string, Callback[]> = {}
+  private cbs: Map<NameSpace, Set<Callback>> = new Map()
   private contexts: Map<string, IContext> = new Map()
 
   public on(nameSpace: NameSpace, callback: Callback) {
-    if (this.cbs[nameSpace]) {
-      this.cbs[nameSpace].push(callback)
+    logger.info(`Subscription context for ${nameSpace}`, callback)
+    if (this.cbs.has(nameSpace)) {
+      this.cbs.get(nameSpace)!.add(callback)
     } else {
-      this.cbs[nameSpace] = [callback]
+      this.cbs.set(nameSpace, new Set([callback]))
     }
     return () => this.off(nameSpace, callback)
   }
 
   public off(nameSpace: NameSpace, callback: Callback) {
-    if (this.cbs[nameSpace]) {
-      this.cbs[nameSpace] = this.cbs[nameSpace].filter((cb) => cb !== callback)
+    if (this.cbs.has(nameSpace)) {
+      this.cbs.get(nameSpace)!.delete(callback)
     }
   }
 
@@ -27,7 +27,7 @@ class Context {
 
   public dispatch(nameSpace: string, context = {} as IContext) {
     const item = this.contexts.get(nameSpace)
-    const current = item ? { ...item, ...context } : (context as Context)
+    const current = item ? { ...item, ...context } : context
     this.contexts.set(nameSpace, current)
     this.emitCallbacks(nameSpace, current)
     return current
@@ -35,12 +35,13 @@ class Context {
 
   public clean(nameSpace: string) {
     this.contexts.delete(nameSpace)
-    this.cbs = {}
+    this.cbs.delete(nameSpace)
+    logger.info(`Clean context for ${nameSpace}`)
   }
 
   private emitCallbacks(nameSpace: string, context: IContext) {
-    if (this.cbs[nameSpace]) {
-      this.cbs[nameSpace].forEach((cb) => cb(context))
+    if (this.cbs.has(nameSpace)) {
+      this.cbs.get(nameSpace)!.forEach((callback) => callback(context))
     }
   }
 }

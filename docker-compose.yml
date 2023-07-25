@@ -23,6 +23,20 @@ services:
     networks:
       - docker-net
 
+  storage:
+    image: minio/minio:latest
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      - MINIO_ROOT_USER=dumm_minio_user
+      - MINIO_ROOT_PASSWORD=dummy_minio_password
+    volumes:
+      - /var/lib/minio/data:/data
+    networks:
+      - docker-net
+    command: server --console-address :9001 ./data
+
   db:
     image: postgres:12.10
     restart: on-failure
@@ -85,6 +99,24 @@ services:
     ports:
       - 4002:4002
 
+  storage-service:
+    <<: *BASE
+    command: yarn start:service:storage
+    environment:
+      <<: *global-vars
+      PORT: 4003
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/services/prisma/prisma/client
+    networks:
+      - docker-net
+    depends_on:
+      - db
+      - storage
+    ports:
+      - 4003:4003
+
   nginx:
     image: nginx:latest
     ports:
@@ -94,6 +126,7 @@ services:
     depends_on:
       - app-service
       - feature-service
+      - storage-service
     networks:
       - docker-net
 

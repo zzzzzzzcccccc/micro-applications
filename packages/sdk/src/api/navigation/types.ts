@@ -1,8 +1,7 @@
-import { Update, To } from 'history'
+import { Update } from 'history'
+import { HistoryMode } from '../../types'
 
-export type Callback = (update: Update) => void
-export type SynchronizeHistoryPayload = {
-  pathname: string
-  onChange?: (update: Update) => void
+export interface Options {
+  historyMode: HistoryMode
 }
-export { Update, To }
+export type Callback = (update: Update) => void
