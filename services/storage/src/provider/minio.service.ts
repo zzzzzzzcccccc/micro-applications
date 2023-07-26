@@ -1,29 +1,59 @@
 import { Injectable } from '@nestjs/common'
-import { ERROR_MESSAGE } from '../constants'
+import { ERROR_MESSAGE, DEFAULT_DOWNLOAD_LINK_EXPIRED } from '../constants'
 import * as minio from 'minio'
+import { CreateBucketPayload, UploadSteamPayload, DownloadLinkPayload, RemoveSteamPayload } from './types'
 
 @Injectable()
 export class MinioService {
   private client: minio.Client
 
-  public async createBucket(name: string, metadata: Record<string, any> = {}) {
-    const error = MinioService.validateMetadata(metadata)
-    if (error) {
-      return Promise.reject(new Error(error))
+  public async createBucket({ metadata }: Omit<CreateBucketPayload, 'provider'>) {
+    const client = this.getClient(metadata)
+    if (client instanceof Error) {
+      return Promise.reject(client)
     }
-    const client = this.createClient(metadata.client_options)
-    const bucketExists = await client.bucketExists(name)
+    const bucketExists = await client.bucketExists(metadata.bucket_name)
     if (bucketExists) {
       return Promise.reject(new Error(ERROR_MESSAGE.BUCKET_ALREADY_EXISTS))
     }
-    await client.makeBucket(name)
+    await client.makeBucket(metadata.bucket_name)
   }
 
-  private static validateMetadata(metadata: Record<string, any>) {
-    if (!metadata.client_options) {
-      return ERROR_MESSAGE.MISSING_CLIENT_OPTIONS
+  public async uploadSteam({ objectName, name, size, type, steam, metadata }: Omit<UploadSteamPayload, 'provider'>) {
+    const client = this.getClient(metadata)
+    if (client instanceof Error) {
+      return Promise.reject(client)
     }
-    return ''
+    return client.putObject(metadata.bucket_name, objectName, steam, size, {
+      'Content-Type': type,
+      'Content-Disposition': `attachment; filename="${encodeURIComponent(name)}"`,
+      'Content-Length': size,
+    })
+  }
+
+  public async downloadLink({ objectName, name, size, type, metadata }: Omit<DownloadLinkPayload, 'provider'>) {
+    const client = this.getClient(metadata)
+    if (client instanceof Error) {
+      return Promise.reject(client)
+    }
+    return client.presignedGetObject(
+      metadata.bucket_name,
+      objectName,
+      metadata.download_link_expired || DEFAULT_DOWNLOAD_LINK_EXPIRED,
+      {
+        'Content-Type': type,
+        'Content-Disposition': `attachment; filename="${encodeURIComponent(name)}"`,
+        'Content-Length': size,
+      },
+    )
+  }
+
+  public async removeSteam({ objectName, metadata }: Omit<RemoveSteamPayload, 'provider'>) {
+    const client = this.getClient(metadata)
+    if (client instanceof Error) {
+      return Promise.reject(client)
+    }
+    return client.removeObject(metadata.bucket_name, objectName)
   }
 
   private createClient(options: minio.ClientOptions) {
@@ -31,5 +61,23 @@ export class MinioService {
       this.client = new minio.Client(options)
     }
     return this.client
+  }
+
+  private getClient(metadata: Record<string, any>) {
+    const error = MinioService.validateMetadata(metadata)
+    if (error) {
+      return new Error(error)
+    }
+    return this.createClient(metadata.client_options)
+  }
+
+  private static validateMetadata(metadata: Record<string, any>) {
+    if (!metadata.bucket_name) {
+      return ERROR_MESSAGE.MISSING_BUCKET_NAME
+    }
+    if (!metadata.client_options) {
+      return ERROR_MESSAGE.MISSING_CLIENT_OPTIONS
+    }
+    return ''
   }
 }

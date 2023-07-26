@@ -1,4 +1,12 @@
-import { Catch, ExceptionFilter, HttpException, ArgumentsHost, HttpStatus, Logger } from '@nestjs/common'
+import {
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  ArgumentsHost,
+  HttpStatus,
+  Logger,
+  PayloadTooLargeException,
+} from '@nestjs/common'
 import { Prisma } from '@service/prisma'
 import { Request, Response } from 'express'
 
@@ -8,21 +16,24 @@ type ResponseBody = {
   message?: string | string[]
 }
 
-@Catch(HttpException, Prisma.PrismaClientKnownRequestError)
+type CommonException = HttpException | Prisma.PrismaClientKnownRequestError | PayloadTooLargeException
+type HttpExceptionOrPayloadTooLargeException = HttpException | PayloadTooLargeException
+
+@Catch(HttpException, Prisma.PrismaClientKnownRequestError, PayloadTooLargeException)
 export class HttpExceptionHandler implements ExceptionFilter {
   private readonly logger: Logger = new Logger('HttpExceptionHandler')
 
-  public catch(exception: HttpException | Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+  public catch(exception: CommonException, host: ArgumentsHost) {
     const isPrismaError = exception instanceof Prisma.PrismaClientKnownRequestError
 
     if (isPrismaError) {
       this.catchPrisma(exception as Prisma.PrismaClientKnownRequestError, host)
     } else {
-      this.catchHttp(exception as HttpException, host)
+      this.catchHttp(exception as HttpExceptionOrPayloadTooLargeException, host)
     }
   }
 
-  private catchHttp(exception: HttpException, host: ArgumentsHost) {
+  private catchHttp(exception: HttpExceptionOrPayloadTooLargeException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()

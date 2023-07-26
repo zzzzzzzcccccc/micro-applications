@@ -9,12 +9,14 @@ const storages: Prisma.storageCreateInput[] = [
     provider: 'MINIO',
     metadata: {
       client_options: {
-        endPoint: 'storage',
+        endPoint: '192.168.176.6',
         port: 9000,
         useSSL: false,
         accessKey: 'fZWTUjWd8TJYMKYay5st',
         secretKey: 'bPEYOEECN23Em17SZRbzOZXUlyvCyySQBdj0g8g3',
       },
+      bucket_name: 'local-tenant-storage',
+      download_link_expired: 600,
     },
   },
 ]

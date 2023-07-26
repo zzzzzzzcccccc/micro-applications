@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { PrismaService } from '@service/prisma'
 import { StorageProviderService } from './provider/storage-provider.service'
-import { StorageStatus } from '@service/core'
+import { StorageStatus, StorageFileDto, serialize } from '@service/core'
 import { ERROR_MESSAGE } from './constants'
+import { v4 as uuid } from 'uuid'
 
 @Injectable()
 export class StorageService {
@@ -20,24 +21,125 @@ export class StorageService {
     })
   }
 
+  public async findById(tenant_id: string, id: string) {
+    // @ts-ignore
+    const storageFile = await this.prismaService.storage_file.findUnique({
+      where: {
+        id: BigInt(id),
+        tenant_id,
+      },
+    })
+    return serialize.serializeData(storageFile)
+  }
+
   public async createBucket(tenant_id: string) {
     const storage = await this.findActive(tenant_id)
     if (!storage) {
       throw new HttpException(ERROR_MESSAGE.MISSING_ACTIVE_STORAGE, HttpStatus.NOT_FOUND)
     }
     try {
-      return await this.storageProviderService.createBucket(
-        storage.provider,
-        `${tenant_id}-microservice`,
-        storage.metadata as Record<string, any>,
-      )
+      return await this.storageProviderService.createBucket({
+        provider: storage.provider,
+        metadata: storage.metadata as Record<string, any>,
+      })
     } catch (e: any) {
-      throw new HttpException(
-        [ERROR_MESSAGE.BUCKET_ALREADY_EXISTS, ERROR_MESSAGE.MISSING_CLIENT_OPTIONS].includes(e?.message || '')
-          ? e.message
-          : ERROR_MESSAGE.CREATE_BUCKET_FAILED,
-        HttpStatus.BAD_REQUEST,
-      )
+      throw StorageService.getErrorHttpException(e, ERROR_MESSAGE.CREATE_BUCKET_FAILED)
     }
+  }
+
+  public async uploadSteam(tenant_id: string, file: StorageFileDto, metadata: string) {
+    const storage = await this.findActive(tenant_id)
+    const { originalname = uuid().replace(/-/g, ''), mimetype, buffer, size } = file
+    if (!storage) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_ACTIVE_STORAGE, HttpStatus.NOT_FOUND)
+    }
+    return this.prismaService.$transaction(async (client) => {
+      try {
+        // @ts-ignore
+        const record = await client.storage_file.create({
+          data: {
+            tenant_id,
+            name: originalname,
+            size,
+            mime_type: mimetype,
+            metadata: serialize.serializeJsonParse<any>(metadata, null),
+          },
+        })
+        const file = serialize.serializeData(record)
+        await this.storageProviderService.uploadSteam({
+          provider: storage.provider,
+          metadata: storage.metadata as Record<string, any>,
+          objectName: `${file.id}/${originalname}`,
+          name: originalname,
+          steam: buffer,
+          size,
+          type: mimetype,
+        })
+        return file
+      } catch (e) {
+        throw StorageService.getErrorHttpException(e, ERROR_MESSAGE.UPLOAD_STEAM_FAILED)
+      }
+    })
+  }
+
+  public async downloadLink(tenant_id: string, id: string) {
+    const storage = await this.findActive(tenant_id)
+    if (!storage) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_ACTIVE_STORAGE, HttpStatus.NOT_FOUND)
+    }
+    const file = await this.findById(tenant_id, id)
+    if (!file) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_STORAGE_FILE, HttpStatus.NOT_FOUND)
+    }
+    try {
+      return await this.storageProviderService.downloadLink({
+        provider: storage.provider,
+        metadata: storage.metadata as Record<string, any>,
+        name: file.name as string,
+        objectName: `${file.id}/${file.name}`,
+        type: file.mime_type as string,
+        size: file.size,
+      })
+    } catch (e) {
+      throw StorageService.getErrorHttpException(e, ERROR_MESSAGE.DOWNLOAD_LINK_FAILED)
+    }
+  }
+
+  public async removeSteam(tenant_id: string, id: string) {
+    const storage = await this.findActive(tenant_id)
+    if (!storage) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_ACTIVE_STORAGE, HttpStatus.NOT_FOUND)
+    }
+    const file = await this.findById(tenant_id, id)
+    if (!file) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_STORAGE_FILE, HttpStatus.NOT_FOUND)
+    }
+    try {
+      await this.storageProviderService.removeSteam({
+        provider: storage.provider,
+        metadata: storage.metadata as Record<string, any>,
+        objectName: `${file.id}/${file.name}`,
+      })
+      await this.prismaService.storage_file.delete({
+        where: {
+          id: BigInt(id),
+        },
+      })
+    } catch (e) {
+      throw StorageService.getErrorHttpException(e, ERROR_MESSAGE.REMOVE_STEAM_FAILED)
+    }
+  }
+
+  private static getErrorHttpException(e: any, message: string) {
+    return new HttpException(
+      [
+        ERROR_MESSAGE.MISSING_BUCKET_NAME,
+        ERROR_MESSAGE.BUCKET_ALREADY_EXISTS,
+        ERROR_MESSAGE.MISSING_CLIENT_OPTIONS,
+      ].includes(e?.message || '')
+        ? e.message
+        : message,
+      HttpStatus.BAD_REQUEST,
+    )
   }
 }

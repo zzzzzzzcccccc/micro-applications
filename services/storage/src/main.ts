@@ -3,7 +3,6 @@ import { INestApplication, ValidationPipe, Logger } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { MainModule } from './main.module'
 import { HttpExceptionHandler } from '@service/core'
-import httpClient, { CreateAxiosDefaults } from './utils/http-client'
 
 const logger = new Logger('Bootstrap')
 
@@ -29,8 +28,6 @@ function initialize(app: INestApplication) {
       defaultModelsExpandDepth: -1,
     },
   })
-
-  httpClient.createInstance({ timeout: 5000 } as CreateAxiosDefaults)
 
   app.enableCors({ origin: process.env.CORS_WHITELIST!.split(',') })
   app.useGlobalPipes(new ValidationPipe())
