@@ -1,14 +1,21 @@
-import { FeatureStatus } from '../enums'
+import { FeatureStatus, FeatureConditionType } from '../enums'
 
-export interface FeatureMetadata {}
+export interface FeatureCondition {
+  type: FeatureConditionType
+  value: string
+  target?: string[]
+}
+
+export interface FeatureMetadata {
+  conditions: FeatureCondition[]
+}
 
 export interface Feature {
   id: string
-  tenant_id: string
+  workspace: string
   name: string
-  value: string
-  status: FeatureStatus
-  metadata?: FeatureMetadata
   created_at: string
   updated_at: string
+  status: FeatureStatus
+  metadata?: FeatureMetadata
 }

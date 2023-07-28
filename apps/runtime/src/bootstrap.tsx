@@ -13,14 +13,14 @@ if (element) {
 function setEnvs() {
   const envs = (window as any)?.RUNTIME_ENV
   if (envs) {
-    sdk.app.setEnvs(envs)
+    sdk.env.set(envs)
   }
 }
 
 function bootstrap(target: HTMLElement) {
   setEnvs()
 
-  httpClient.initialize(sdk.app.envs.API_GATEWAY)
+  httpClient.initialize(sdk.env.current.API_GATEWAY)
 
   createRoot(target).render(<App />)
 }

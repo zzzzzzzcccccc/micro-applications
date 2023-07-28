@@ -25,8 +25,8 @@ export default function ProviderGlobal({ children }: { children: React.ReactNode
       const [features, apps] = await Promise.all([
         fetchFeatures({
           method: 'get',
-          url: '/feature',
-          params: { tenant_id: sdk.app.envs.PROVIDER_TENANT_ID, status: [FeatureStatus.ACTIVE, FeatureStatus.ROLLOUT] },
+          url: `/feature/${sdk.env.current.FEATURE_WORKSPACE}`,
+          params: { status: FeatureStatus.ACTIVE },
         }),
         fetchApps({ method: 'get', url: '/app' }),
       ])

@@ -1,6 +1,6 @@
 import { PrismaClient } from './client'
 import process from 'process'
-import features from './moc-feature'
+import features from './mock-feature'
 import apps from './mock-apps'
 import storages from './mock-storage'
 

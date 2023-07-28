@@ -3,17 +3,13 @@ import { logger } from '../../utils'
 import { Options } from './types'
 
 class App {
-  private currentEnv: Record<string, any> = {}
   private apps: AppModel[] = []
+  private readonly env: Options['env']
   private readonly feature: Options['feature']
 
-  constructor({ feature }: Options) {
+  constructor({ env, feature }: Options) {
+    this.env = env
     this.feature = feature
-  }
-
-  public setEnvs(payload: Record<string, any>) {
-    this.currentEnv = { ...this.currentEnv, ...payload }
-    logger.info('Set envs', this.currentEnv)
   }
 
   public set(payload: AppModel[]) {
@@ -30,7 +26,7 @@ class App {
   }
 
   private transformApp(payload: AppModel) {
-    const { BUILD_ENV = 'development' } = this.currentEnv
+    const { BUILD_ENV = 'development' } = this.env.current
     return {
       ...payload,
       ...this.transformMetadata(payload.metadata[BUILD_ENV]),
@@ -49,18 +45,14 @@ class App {
     if (match && match.length) {
       const value = match[1].trim()
       const [featureName, defaultValue] = value.split(':-')
-      const feature = this.feature.getByName(featureName)
-      const target = feature ? feature.value : defaultValue
+      const feature = this.feature.getValue(featureName)
+      const target = feature || defaultValue
       metadata.remoteModule.url = metadata.remoteModule.url.replace(regex, target || '')
     }
   }
 
   get current() {
     return this.apps
-  }
-
-  get envs() {
-    return this.currentEnv
   }
 }
 
