@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, StreamableFile } from '@nestjs/common'
 import { PrismaService } from '@service/prisma'
 import { StorageProviderService } from './provider/storage-provider.service'
 import { StorageStatus, StorageFileDto, serialize } from '@service/core'
@@ -22,7 +22,6 @@ export class StorageService {
   }
 
   public async findById(tenant_id: string, id: string) {
-    // @ts-ignore
     const storageFile = await this.prismaService.storage_file.findUnique({
       where: {
         id: BigInt(id),
@@ -47,7 +46,7 @@ export class StorageService {
     }
   }
 
-  public async uploadSteam(tenant_id: string, file: StorageFileDto, metadata: string) {
+  public async uploadStream(tenant_id: string, file: StorageFileDto, metadata: string) {
     const storage = await this.findActive(tenant_id)
     const { originalname = uuid().replace(/-/g, ''), mimetype, buffer, size } = file
     if (!storage) {
@@ -55,7 +54,6 @@ export class StorageService {
     }
     return this.prismaService.$transaction(async (client) => {
       try {
-        // @ts-ignore
         const record = await client.storage_file.create({
           data: {
             tenant_id,
@@ -66,7 +64,7 @@ export class StorageService {
           },
         })
         const file = serialize.serializeData(record)
-        await this.storageProviderService.uploadSteam({
+        await this.storageProviderService.uploadStream({
           provider: storage.provider,
           metadata: storage.metadata as Record<string, any>,
           objectName: `${file.id}/${originalname}`,
@@ -105,7 +103,7 @@ export class StorageService {
     }
   }
 
-  public async removeSteam(tenant_id: string, id: string) {
+  public async readStream(tenant_id: string, id: string) {
     const storage = await this.findActive(tenant_id)
     if (!storage) {
       throw new HttpException(ERROR_MESSAGE.MISSING_ACTIVE_STORAGE, HttpStatus.NOT_FOUND)
@@ -115,7 +113,31 @@ export class StorageService {
       throw new HttpException(ERROR_MESSAGE.MISSING_STORAGE_FILE, HttpStatus.NOT_FOUND)
     }
     try {
-      await this.storageProviderService.removeSteam({
+      const record = await this.storageProviderService.readStream({
+        provider: storage.provider,
+        metadata: storage.metadata as Record<string, any>,
+        objectName: `${file.id}/${file.name}`,
+      })
+      return {
+        stream: new StreamableFile(record),
+        file,
+      }
+    } catch (e) {
+      throw StorageService.getErrorHttpException(e, ERROR_MESSAGE.READ_STEAM_FAILED)
+    }
+  }
+
+  public async removeStream(tenant_id: string, id: string) {
+    const storage = await this.findActive(tenant_id)
+    if (!storage) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_ACTIVE_STORAGE, HttpStatus.NOT_FOUND)
+    }
+    const file = await this.findById(tenant_id, id)
+    if (!file) {
+      throw new HttpException(ERROR_MESSAGE.MISSING_STORAGE_FILE, HttpStatus.NOT_FOUND)
+    }
+    try {
+      await this.storageProviderService.removeStream({
         provider: storage.provider,
         metadata: storage.metadata as Record<string, any>,
         objectName: `${file.id}/${file.name}`,
@@ -130,7 +152,7 @@ export class StorageService {
     }
   }
 
-  private static getErrorHttpException(e: any, message: string) {
+  private static getErrorHttpException(e: any, message: string, status = HttpStatus.BAD_REQUEST) {
     return new HttpException(
       [
         ERROR_MESSAGE.MISSING_BUCKET_NAME,
@@ -139,7 +161,7 @@ export class StorageService {
       ].includes(e?.message || '')
         ? e.message
         : message,
-      HttpStatus.BAD_REQUEST,
+      status,
     )
   }
 }

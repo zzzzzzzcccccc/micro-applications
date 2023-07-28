@@ -3,7 +3,7 @@ export interface CreateBucketPayload {
   metadata: Record<string, any>
 }
 
-export interface UploadSteamPayload {
+export interface UploadStreamPayload {
   provider: string
   metadata: Record<string, any>
   steam: Buffer
@@ -13,9 +13,15 @@ export interface UploadSteamPayload {
   type: string
 }
 
-export interface DownloadLinkPayload extends Omit<UploadSteamPayload, 'steam'> {}
+export interface DownloadLinkPayload extends Omit<UploadStreamPayload, 'steam'> {}
 
-export interface RemoveSteamPayload {
+export interface RemoveStreamPayload {
+  provider: string
+  metadata: Record<string, any>
+  objectName: string
+}
+
+export interface ReadSteamPayload {
   provider: string
   metadata: Record<string, any>
   objectName: string

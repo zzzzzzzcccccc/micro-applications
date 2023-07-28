@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { ERROR_MESSAGE, DEFAULT_DOWNLOAD_LINK_EXPIRED } from '../constants'
 import * as minio from 'minio'
-import { CreateBucketPayload, UploadSteamPayload, DownloadLinkPayload, RemoveSteamPayload } from './types'
+import { serialize } from '@service/core'
+import {
+  CreateBucketPayload,
+  UploadStreamPayload,
+  DownloadLinkPayload,
+  ReadSteamPayload,
+  RemoveStreamPayload,
+} from './types'
 
 @Injectable()
 export class MinioService {
@@ -19,16 +26,18 @@ export class MinioService {
     await client.makeBucket(metadata.bucket_name)
   }
 
-  public async uploadSteam({ objectName, name, size, type, steam, metadata }: Omit<UploadSteamPayload, 'provider'>) {
+  public async uploadStream({ objectName, name, size, type, steam, metadata }: Omit<UploadStreamPayload, 'provider'>) {
     const client = this.getClient(metadata)
     if (client instanceof Error) {
       return Promise.reject(client)
     }
-    return client.putObject(metadata.bucket_name, objectName, steam, size, {
-      'Content-Type': type,
-      'Content-Disposition': `attachment; filename="${encodeURIComponent(name)}"`,
-      'Content-Length': size,
-    })
+    return client.putObject(
+      metadata.bucket_name,
+      objectName,
+      steam,
+      size,
+      serialize.serializeFileHeaders(name, type, size),
+    )
   }
 
   public async downloadLink({ objectName, name, size, type, metadata }: Omit<DownloadLinkPayload, 'provider'>) {
@@ -40,15 +49,19 @@ export class MinioService {
       metadata.bucket_name,
       objectName,
       metadata.download_link_expired || DEFAULT_DOWNLOAD_LINK_EXPIRED,
-      {
-        'Content-Type': type,
-        'Content-Disposition': `attachment; filename="${encodeURIComponent(name)}"`,
-        'Content-Length': size,
-      },
+      serialize.serializeFileHeaders(name, type, size),
     )
   }
 
-  public async removeSteam({ objectName, metadata }: Omit<RemoveSteamPayload, 'provider'>) {
+  public async readStream({ objectName, metadata }: Omit<ReadSteamPayload, 'provider'>) {
+    const client = this.getClient(metadata)
+    if (client instanceof Error) {
+      return Promise.reject(client)
+    }
+    return client.getObject(metadata.bucket_name, objectName)
+  }
+
+  public async removeStream({ objectName, metadata }: Omit<RemoveStreamPayload, 'provider'>) {
     const client = this.getClient(metadata)
     if (client instanceof Error) {
       return Promise.reject(client)

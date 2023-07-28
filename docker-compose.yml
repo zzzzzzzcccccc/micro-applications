@@ -23,6 +23,17 @@ services:
     networks:
       - docker-net
 
+  redis-commander:
+    image: ghcr.io/joeferner/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=redis:redis:6379
+    depends_on:
+      - redis
+    networks:
+      - docker-net
+    ports:
+      - 8081:8081
+
   storage:
     image: minio/minio:latest
     ports:

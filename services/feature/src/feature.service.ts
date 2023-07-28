@@ -1,52 +1,40 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaService, Prisma } from '@service/prisma'
-import { QueryFeatureDto, SaveFeatureDto, serialize, FeatureStatus } from '@service/core'
+import { FeatureStatus, QueryFeatureDto, SaveFeatureDto } from '@service/core'
+import { PrismaService } from '@service/prisma'
 
-const { serializeToArray } = serialize
+type SavePayload = SaveFeatureDto & { workspace: string }
 
 @Injectable()
 export class FeatureService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public findMany(queryFeatureDto: QueryFeatureDto) {
+  public async findMany(workspace: string, payload: QueryFeatureDto) {
     return this.prismaService.feature.findMany({
-      where: FeatureService.buildFindManyWhere(queryFeatureDto),
+      where: {
+        workspace,
+        ...payload,
+      },
     })
   }
 
-  public findById(id: string, tenant_id: string) {
-    return this.prismaService.feature.findUnique({ where: { id: BigInt(id), tenant_id } })
+  public async save(payload: SavePayload) {
+    return payload.id ? this.update(payload) : this.create(payload)
   }
 
-  public save(saveFeatureDto: SaveFeatureDto) {
-    return saveFeatureDto.id ? this.update(saveFeatureDto) : this.create(saveFeatureDto)
+  public create({ status = FeatureStatus.ACTIVE, metadata = {}, ...payload }: SavePayload) {
+    return this.prismaService.feature.create({ data: { status, metadata, ...payload } } as any)
   }
 
-  public deleteById(id: string, tenant_id: string) {
-    return this.prismaService.feature.delete({ where: { id: BigInt(id), tenant_id } })
+  public update({ id, workspace, ...payload }: SavePayload) {
+    return this.prismaService.feature.update({ data: payload, where: { id: BigInt(id as string), workspace } } as any)
   }
 
-  private static buildFindManyWhere(queryFeatureDto: QueryFeatureDto) {
-    const { tenant_id, name, status } = queryFeatureDto
-    const where: Prisma.featureWhereInput = {
-      tenant_id,
-      name: {
-        contains: name,
+  public async deleteById(workspace: string, id: string) {
+    return this.prismaService.feature.delete({
+      where: {
+        workspace,
+        id: BigInt(id),
       },
-    }
-    const [statusList] = [serializeToArray<FeatureStatus>(status)]
-    statusList.length && (where.status = statusList.length === 1 ? statusList[0] : { in: statusList })
-    return where
-  }
-
-  private create(payload: SaveFeatureDto) {
-    return this.prismaService.feature.create({ data: payload } as any)
-  }
-
-  private update({ id, ...context }: SaveFeatureDto) {
-    return this.prismaService.app.update({
-      data: { ...context } as any,
-      where: { id: BigInt(id as string) },
     })
   }
 }

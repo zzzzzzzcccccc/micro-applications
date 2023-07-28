@@ -10,5 +10,6 @@ export const ERROR_MESSAGE = {
   MISSING_STORAGE_FILE: 'Missing storage file',
   DOWNLOAD_LINK_FAILED: 'Download link failed',
   REMOVE_STEAM_FAILED: 'Remove steam failed',
+  READ_STEAM_FAILED: 'Read steam failed',
 }
 export const DEFAULT_DOWNLOAD_LINK_EXPIRED = 600

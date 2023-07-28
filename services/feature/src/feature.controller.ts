@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Query, UseInterceptors, Body, Patch, Param, Delete } from '@nestjs/common'
-import { ResponseSerializerInterceptor, QueryFeatureDto, SaveFeatureDto } from '@service/core'
+import { Controller, Get, Post, Delete, Body, Query, Param, UseInterceptors } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import { QueryFeatureDto, SaveFeatureDto, ResponseSerializerInterceptor } from '@service/core'
 import { FeatureService } from './feature.service'
 
 @ApiTags('feature')
@@ -8,32 +8,20 @@ import { FeatureService } from './feature.service'
 export class FeatureController {
   constructor(private readonly featureService: FeatureService) {}
 
-  @Get('/')
+  @Get('/:workspace')
   @UseInterceptors(ResponseSerializerInterceptor)
-  findMany(@Query() queryFeatureDto: QueryFeatureDto) {
-    return this.featureService.findMany(queryFeatureDto)
+  public findMany(@Param('workspace') workspace: string, @Query() queryFeatureDto: QueryFeatureDto) {
+    return this.featureService.findMany(workspace, queryFeatureDto)
   }
 
-  @Get('/:tenant_id/:id')
+  @Post('/:workspace')
   @UseInterceptors(ResponseSerializerInterceptor)
-  findById(@Param('tenant_id') tenant_id: string, @Param('id') id: string) {
-    return this.featureService.findById(id, tenant_id)
+  public save(@Param('workspace') workspace: string, @Body() saveFeatureDto: SaveFeatureDto) {
+    return this.featureService.save({ ...saveFeatureDto, workspace })
   }
 
-  @Post('/')
-  @UseInterceptors(ResponseSerializerInterceptor)
-  create(@Body() saveFeatureDto: SaveFeatureDto) {
-    return this.featureService.save(saveFeatureDto)
-  }
-
-  @Patch('/:id')
-  @UseInterceptors(ResponseSerializerInterceptor)
-  update(@Param('id') id: string, @Body() saveFeatureDto: SaveFeatureDto) {
-    return this.featureService.save({ ...saveFeatureDto, id })
-  }
-
-  @Delete('/:tenant_id/:id')
-  deleteById(@Param('tenant_id') tenant_id: string, @Param('id') id: string) {
-    return this.featureService.deleteById(id, tenant_id)
+  @Delete('/:workspace/:id')
+  public delete(@Param('workspace') workspace: string, @Param('id') id: string) {
+    return this.featureService.deleteById(workspace, id)
   }
 }

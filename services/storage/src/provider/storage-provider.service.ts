@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { MinioService } from './minio.service'
 import { StorageProvider } from '@service/core'
-import { CreateBucketPayload, UploadSteamPayload, DownloadLinkPayload, RemoveSteamPayload } from './types'
+import {
+  CreateBucketPayload,
+  UploadStreamPayload,
+  DownloadLinkPayload,
+  ReadSteamPayload,
+  RemoveStreamPayload,
+} from './types'
 
 @Injectable()
 export class StorageProviderService {
@@ -18,9 +24,9 @@ export class StorageProviderService {
     }
   }
 
-  public async uploadSteam({ provider, ...payload }: UploadSteamPayload) {
+  public async uploadStream({ provider, ...payload }: UploadStreamPayload) {
     try {
-      return await this.usingService(provider).uploadSteam(payload)
+      return await this.usingService(provider).uploadStream(payload)
     } catch (e: any) {
       this.logger.error(`Error upload stream by ${provider} ${e?.message}`)
       throw e
@@ -36,9 +42,18 @@ export class StorageProviderService {
     }
   }
 
-  public async removeSteam({ provider, ...payload }: RemoveSteamPayload) {
+  public async readStream({ provider, ...payload }: ReadSteamPayload) {
     try {
-      return await this.usingService(provider).removeSteam(payload)
+      return await this.usingService(provider).readStream(payload)
+    } catch (e: any) {
+      this.logger.error(`Error read stream by ${provider} ${e?.message}`)
+      throw e
+    }
+  }
+
+  public async removeStream({ provider, ...payload }: RemoveStreamPayload) {
+    try {
+      return await this.usingService(provider).removeStream(payload)
     } catch (e: any) {
       this.logger.error(`Error remove steam by ${provider} ${e?.message}`)
       throw e

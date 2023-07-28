@@ -1,7 +1,7 @@
 import { PrismaClient } from './client'
 import process from 'process'
+import features from './moc-feature'
 import apps from './mock-apps'
-import features from './mock-feature'
 import storages from './mock-storage'
 
 const prisma = new PrismaClient()
@@ -9,21 +9,20 @@ const prisma = new PrismaClient()
 async function main() {
   await cleanTables()
 
-  const [apps, features, storages] = await createMockData()
-
-  console.log('created apps ===>', apps)
+  const [features, apps, storages] = await createMockData()
   console.log('created features ===>', features)
+  console.log('created apps ===>', apps)
   console.log('created storages ===>', storages)
 }
 
 function cleanTables() {
-  return Promise.all([prisma.app.deleteMany(), prisma.feature.deleteMany(), prisma.storage.deleteMany()])
+  return Promise.all([prisma.feature.deleteMany(), prisma.app.deleteMany(), prisma.storage.deleteMany()])
 }
 
 function createMockData() {
   return Promise.all([
-    prisma.app.createMany({ data: apps }),
     prisma.feature.createMany({ data: features }),
+    prisma.app.createMany({ data: apps }),
     prisma.storage.createMany({ data: storages }),
   ])
 }

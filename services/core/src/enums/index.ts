@@ -15,7 +15,11 @@ export enum AppFrame {
 export enum FeatureStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
-  ROLLOUT = 'ROLLOUT',
+}
+
+export enum FeatureConditionType {
+  WHITELIST = 'WHITELIST',
+  ELSE = 'ELSE',
 }
 
 export enum StorageProvider {

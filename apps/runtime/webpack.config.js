@@ -17,6 +17,7 @@ module.exports = (_, { mode }) => {
         BUILD_ENV: process.env.BUILD_ENV,
         API_GATEWAY: process.env.API_GATEWAY,
         PROVIDER_TENANT_ID: process.env.PROVIDER_TENANT_ID,
+        FEATURE_WORKSPACE: process.env.FEATURE_WORKSPACE,
       }),
     },
   })

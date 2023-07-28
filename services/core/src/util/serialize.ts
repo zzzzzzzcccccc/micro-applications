@@ -61,3 +61,11 @@ export function serializeToArray<T>(target?: T | T[], separator = ',') {
   }
   return (target as string).split(separator) as T[]
 }
+
+export function serializeFileHeaders(name: string = '', type: string = '', size: number = 0) {
+  return {
+    'Content-Disposition': `attachment; filename="${encodeURIComponent(name)}"`,
+    'Content-Type': type,
+    'Content-Length': size,
+  }
+}

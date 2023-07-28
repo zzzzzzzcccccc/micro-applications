@@ -8,7 +8,7 @@ CREATE TYPE "app_frame" AS ENUM ('REACT');
 CREATE TYPE "app_status" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateEnum
-CREATE TYPE "feature_status" AS ENUM ('ACTIVE', 'INACTIVE', 'ROLLOUT');
+CREATE TYPE "feature_status" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateEnum
 CREATE TYPE "storage_provider" AS ENUM ('AWS', 'MINIO');
@@ -26,7 +26,7 @@ CREATE TABLE "app" (
     "path" VARCHAR(100),
     "mode" "app_mode" NOT NULL DEFAULT 'APPLICATION',
     "frame" "app_frame" NOT NULL DEFAULT 'REACT',
-    "status" "app_status" NOT NULL DEFAULT 'INACTIVE',
+    "status" "app_status" NOT NULL DEFAULT 'ACTIVE',
     "metadata" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -37,9 +37,8 @@ CREATE TABLE "app" (
 -- CreateTable
 CREATE TABLE "feature" (
     "id" BIGSERIAL NOT NULL,
-    "tenant_id" VARCHAR(50) NOT NULL,
+    "workspace" VARCHAR(100) NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "value" VARCHAR(255) NOT NULL DEFAULT 'off',
     "status" "feature_status" NOT NULL DEFAULT 'ACTIVE',
     "metadata" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -80,7 +79,10 @@ CREATE TABLE "storage_file" (
 CREATE INDEX "app_name_idx" ON "app"("name");
 
 -- CreateIndex
-CREATE INDEX "feature_tenant_id_idx" ON "feature"("tenant_id");
+CREATE INDEX "app_status_idx" ON "app"("status");
+
+-- CreateIndex
+CREATE INDEX "feature_workspace_idx" ON "feature"("workspace");
 
 -- CreateIndex
 CREATE INDEX "feature_status_idx" ON "feature"("status");
@@ -93,3 +95,6 @@ CREATE INDEX "storage_status_idx" ON "storage"("status");
 
 -- CreateIndex
 CREATE INDEX "storage_file_tenant_id_idx" ON "storage_file"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "storage_file_status_idx" ON "storage_file"("status");
