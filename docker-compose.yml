@@ -13,26 +13,26 @@ services:
       context: .
       dockerfile: Dockerfile
 
-  redis:
-    image: redis:7-alpine
-    restart: on-failure
-    ports:
-      - 6379:6379
-    volumes:
-      - /var/lib/redis/data:/var/lib/redis/data
-    networks:
-      - docker-net
-
-  redis-commander:
-    image: ghcr.io/joeferner/redis-commander:latest
-    environment:
-      - REDIS_HOSTS=redis:redis:6379
-    depends_on:
-      - redis
-    networks:
-      - docker-net
-    ports:
-      - 8081:8081
+  #  redis:
+  #    image: redis:7-alpine
+  #    restart: on-failure
+  #    ports:
+  #      - 6379:6379
+  #    volumes:
+  #      - /var/lib/redis/data:/var/lib/redis/data
+  #    networks:
+  #      - docker-net
+  #
+  #  redis-commander:
+  #    image: ghcr.io/joeferner/redis-commander:latest
+  #    environment:
+  #      - REDIS_HOSTS=redis:redis:6379
+  #    depends_on:
+  #      - redis
+  #    networks:
+  #      - docker-net
+  #    ports:
+  #      - 8081:8081
 
   storage:
     image: minio/minio:latest

@@ -1,8 +1,10 @@
 # Micro Applications
 
-## Modules
+- A micro-frontend solution, component-level isolated version control, feature-flag function
 
-### libs
+- Implemented through webpack remote module
+
+## libs
 
 | Name | Docs |
 |------|-------------|
@@ -11,7 +13,7 @@
 | Sdk          |  [Doc](packages/sdk/README.md)            |
 | Hooks      |  [Doc](packages/hooks/README.md)            |
 
-### apps
+## apps
 | Name | Description |
 |------|-------------|
 | runtime | Host application by react   |
@@ -21,7 +23,7 @@
 | dashboard-panel | Child application by react-component in dashboard |
 | dashboard-container | Child application by react-component in dashboard |
 
-### services
+## services
 
 | Name | Description |
 | ------ | ------ |
